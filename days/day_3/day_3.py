@@ -12,8 +12,38 @@ def get_2_lists_of_input():
     return [input_1, input_2]
 
 
-list_1 = get_2_lists_of_input()[0]
-list_2 = get_2_lists_of_input()[1]
+def get_answer_to_question_1():
+    list_1 = get_2_lists_of_input()[0]
+    list_2 = get_2_lists_of_input()[1]
+    list_of_intersection_tuples = get_intersection_tuple_list(get_list_of_route(list_1), get_list_of_route(list_2))
+    return get_closest_distance(list_of_intersection_tuples)
+
+
+def get_closest_distance(list_of_intersection_tuples):
+    a, b = list_of_intersection_tuples[0]
+    current_result = abs(a) + abs(b)
+    for tu in list_of_intersection_tuples:
+        c, d = tu
+        if abs(c) + abs(d) < current_result:
+            current_result = abs(c) + abs(d)
+    return current_result
+
+
+def get_answer_to_question_2():
+    list_1 = get_2_lists_of_input()[0]
+    list_2 = get_2_lists_of_input()[1]
+    list_of_intersection_tuples = get_intersection_tuple_list(get_list_of_route(list_1), get_list_of_route(list_2))
+    return get_min_steps(list_1, list_2, list_of_intersection_tuples)
+
+
+def get_min_steps(list_1, list_2, list_intersections):
+    dict_1 = get_intersection_steps_dict(list_1, list_intersections)
+    dict_2 = get_intersection_steps_dict(list_2, list_intersections)
+
+    final_dict = {}
+    for ke in dict_1.keys():
+        final_dict[ke] = dict_1[ke] + dict_2[ke]
+    return min(final_dict.values())
 
 
 def get_list_of_route(list_of_instructions):
@@ -43,37 +73,17 @@ def get_list_of_route(list_of_instructions):
     return list_of_tuple
 
 
-def get_cross_points(list_of_tuple_1, list_of_tuple_2):
-    return set(list_of_tuple_1) & set(list_of_tuple_2)
+def get_intersection_tuple_list(first_route_tuple_list, second_route_tuple_list):
+    return list(set(first_route_tuple_list) & set(second_route_tuple_list))
 
 
-def get_closest_distance(list_of_cross_points):
-    a, b = list_of_cross_points[0]
-    current_result = abs(a) + abs(b)
-    for tu in list_of_cross_points:
-        if tu == (0, 0):
-            continue
-        c, d = tu
-        if abs(c) + abs(d) < current_result:
-            current_result = abs(c) + abs(d)
-    return current_result
-
-
-tuple_1 = get_list_of_route(list_1)
-tuple_2 = get_list_of_route(list_2)
-
-cross_points = get_cross_points(tuple_1, tuple_2)
-
-list_of_cross_points = list(cross_points)
-
-
-def get_dict_of_cross_tuple_with_steps(list_of_instructions, list_of_cross_points):
-    list_of_tuple = [(0, 0)]
+def get_intersection_steps_dict(list_of_instructions, list_of_cross_points):
+    list_of_tuple = []
     total_steps = 0
     dict_of_steps = {}
     for ins in list_of_instructions:
 
-        last_tuple_item = list_of_tuple[-1]
+        last_tuple_item = (0, 0) if (len(list_of_tuple) == 0) else list_of_tuple[-1]
         last_x, last_y = last_tuple_item
 
         direction = ins[0]
@@ -83,8 +93,7 @@ def get_dict_of_cross_tuple_with_steps(list_of_instructions, list_of_cross_point
                 total_steps += 1
                 current_x_y = (last_x + time + 1, last_y)
                 list_of_tuple.append(current_x_y)
-                if (current_x_y in list_of_cross_points) and (
-                        current_x_y not in dict_of_steps.keys() and current_x_y != (0, 0)):
+                if (current_x_y in list_of_cross_points) and (current_x_y not in dict_of_steps.keys()):
                     dict_of_steps[current_x_y] = total_steps
 
         if direction == "L":
@@ -112,28 +121,6 @@ def get_dict_of_cross_tuple_with_steps(list_of_instructions, list_of_cross_point
                     dict_of_steps[current_x_y] = total_steps
 
     return dict_of_steps
-
-
-dict_1 = get_dict_of_cross_tuple_with_steps(list_1, list_of_cross_points)
-print(dict_1)
-
-dict_2 = get_dict_of_cross_tuple_with_steps(list_2, list_of_cross_points)
-print(dict_2)
-
-final_dict = {}
-
-for ke in dict_1.keys():
-    final_dict[ke] = dict_1[ke] + dict_2[ke]
-
-print(final_dict)
-
-
-def get_answer_to_question_1():
-    return get_closest_distance(list_of_cross_points)
-
-
-def get_answer_to_question_2():
-    return min(final_dict.values())
 
 
 if __name__ == "__main__":
