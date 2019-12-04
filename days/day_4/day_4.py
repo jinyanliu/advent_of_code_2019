@@ -11,9 +11,9 @@ end_number = 678275
 def get_answer_to_question_1():
     valid_passwords = []
     for number in range(start_number, end_number):
-        if (is_sorted(number)):
+        if is_sorted(number) and has_same_adjacent_digits(number):
             valid_passwords.append(number)
-    return valid_passwords
+    return len(valid_passwords)
 
 
 def is_sorted(number):
@@ -24,7 +24,14 @@ def is_sorted(number):
         return False
 
 
+def has_same_adjacent_digits(number):
+    number_str = str(number)
+    for i in range(0, 5):
+        if number_str[i] == number_str[i + 1]:
+            return True
+    return False
+
+
 if __name__ == "__main__":
     print("Answer to question 1 = ", get_answer_to_question_1())
     print("Answer to question 2 = ")
-    print(is_sorted(1234566666666789))
