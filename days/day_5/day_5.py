@@ -41,14 +41,11 @@ def get_dict_instruction(digits):
         dict["second_mode"] = int(str(digits)[1])
         dict["third_mode"] = int(str(digits)[0])
 
-
     elif len(str(digits)) == 4:
         dict["opcode"] = int(str(digits)[2] + str(digits)[3])
         dict["first_mode"] = int(str(digits)[1])
         dict["second_mode"] = int(str(digits)[0])
         dict["third_mode"] = 0
-
-
 
     elif len(str(digits)) == 3:
         dict["opcode"] = int(str(digits)[1] + str(digits)[2])
@@ -56,21 +53,17 @@ def get_dict_instruction(digits):
         dict["second_mode"] = 0
         dict["third_mode"] = 0
 
-
-
     elif len(str(digits)) == 2:
         dict["opcode"] = int(str(digits)[0] + str(digits)[1])
         dict["first_mode"] = 0
         dict["second_mode"] = 0
         dict["third_mode"] = 0
 
-
     elif len(str(digits)) == 1:
         dict["opcode"] = digits
         dict["first_mode"] = 0
         dict["second_mode"] = 0
         dict["third_mode"] = 0
-
 
     elif len(str(digits)) == 0:
         print("Opcode is empty: " + str(digits))
@@ -82,6 +75,7 @@ def get_result_list(integer_input, input_list):
     i = 0
     step = 0
     while i + 1 < len(input_list):
+        should_increase_i = True
 
         dict_instrction = get_dict_instruction(input_list[i])
 
@@ -120,9 +114,59 @@ def get_result_list(integer_input, input_list):
             print("output_value = " + str(output_value))
             step = 1
 
+        elif opcode == Opcode.JUMP_IF_TRUE.value:
+            step = 2
+            first_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 1]
+            if first_value != 0:
+                second_value = input_list[input_list[i + 2]] if (second_mode == ParametersMode.POSITION.value) else \
+                    input_list[i + 2]
+                i = second_value
+                should_increase_i = False
+
+        elif opcode == Opcode.JUMP_IF_FALSE.value:
+            step = 2
+            first_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 1]
+            if first_value == 0:
+                second_value = input_list[input_list[i + 2]] if (second_mode == ParametersMode.POSITION.value) else \
+                    input_list[i + 2]
+                i = second_value
+                should_increase_i = False
+
+        elif opcode == Opcode.LESS_THAN.value:
+            place_to_store = input_list[i + 3]
+
+            first_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 1]
+            second_value = input_list[input_list[i + 2]] if (second_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 2]
+
+            if first_value < second_value:
+                input_list[place_to_store] = 1
+            else:
+                input_list[place_to_store] = 0
+            step = 3
+
+        elif opcode == Opcode.EQUALS.value:
+            place_to_store = input_list[i + 3]
+
+            first_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 1]
+            second_value = input_list[input_list[i + 2]] if (second_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 2]
+
+            if first_value == second_value:
+                input_list[place_to_store] = 1
+            else:
+                input_list[place_to_store] = 0
+            step = 3
+
         elif opcode == Opcode.HALT.value:
             break
-        i += step + 1
+
+        if should_increase_i:
+            i += step + 1
     return input_list
 
 
@@ -132,3 +176,4 @@ def get_solution_1():
 
 if __name__ == "__main__":
     get_solution_1()
+    get_result_list(5, get_list_of_int_input())
