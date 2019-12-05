@@ -188,3 +188,4 @@ def get_solution_1():
 if __name__ == "__main__":
     get_solution_1()
     get_result_list(5, get_list_of_int_input())
+    print("3"[-3:-2])
