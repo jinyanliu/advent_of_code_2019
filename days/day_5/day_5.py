@@ -23,6 +23,13 @@ class ParametersMode(Enum):
     IMMEDIATE = 1
 
 
+class InstructionDictKey(Enum):
+    OPCODE = "opcode"
+    FIRST_MODE = "first_mode"
+    SECOND_MODE = "second_mode"
+    THIRD_MODE = "third_mode"
+
+
 def get_list_of_int_input():
     with open("day_5_input") as lines:
         list_of_string = lines.readline().split(',')
@@ -31,44 +38,53 @@ def get_list_of_int_input():
 
 
 def get_dict_instruction(digits):
-    dict = {}
+    instruction_dict = {}
     if len(str(digits)) > 5:
         print("Opcode more than 5 digits: " + str(digits))
 
     if len(str(digits)) == 5:
-        dict["opcode"] = int(str(digits)[3] + str(digits)[4])
-        dict["first_mode"] = int(str(digits)[2])
-        dict["second_mode"] = int(str(digits)[1])
-        dict["third_mode"] = int(str(digits)[0])
+        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[3] + str(digits)[4])
+        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[2])
+        instruction_dict[InstructionDictKey.SECOND_MODE.value] = int(str(digits)[1])
+        instruction_dict[InstructionDictKey.THIRD_MODE.value] = int(str(digits)[0])
 
     elif len(str(digits)) == 4:
-        dict["opcode"] = int(str(digits)[2] + str(digits)[3])
-        dict["first_mode"] = int(str(digits)[1])
-        dict["second_mode"] = int(str(digits)[0])
-        dict["third_mode"] = 0
+        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[2] + str(digits)[3])
+        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[1])
+        instruction_dict[InstructionDictKey.SECOND_MODE.value] = int(str(digits)[0])
+        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
 
     elif len(str(digits)) == 3:
-        dict["opcode"] = int(str(digits)[1] + str(digits)[2])
-        dict["first_mode"] = int(str(digits)[0])
-        dict["second_mode"] = 0
-        dict["third_mode"] = 0
+        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[1] + str(digits)[2])
+        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[0])
+        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
+        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
 
     elif len(str(digits)) == 2:
-        dict["opcode"] = int(str(digits)[0] + str(digits)[1])
-        dict["first_mode"] = 0
-        dict["second_mode"] = 0
-        dict["third_mode"] = 0
+        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[0] + str(digits)[1])
+        instruction_dict[InstructionDictKey.FIRST_MODE.value] = 0
+        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
+        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
 
     elif len(str(digits)) == 1:
-        dict["opcode"] = digits
-        dict["first_mode"] = 0
-        dict["second_mode"] = 0
-        dict["third_mode"] = 0
+        instruction_dict[InstructionDictKey.OPCODE.value] = digits
+        instruction_dict[InstructionDictKey.FIRST_MODE.value] = 0
+        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
+        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
 
     elif len(str(digits)) == 0:
         print("Opcode is empty: " + str(digits))
 
-    return dict
+    return instruction_dict
+
+
+def get_instructions(instruction_code):
+    dict_instruction = get_dict_instruction(instruction_code)
+    opcode = dict_instruction[InstructionDictKey.OPCODE.value]
+    first_mode = dict_instruction[InstructionDictKey.FIRST_MODE.value]
+    second_mode = dict_instruction[InstructionDictKey.SECOND_MODE.value]
+    third_mode = dict_instruction[InstructionDictKey.THIRD_MODE.value]
+    return opcode, first_mode, second_mode, third_mode
 
 
 def get_result_list(integer_input, input_list):
@@ -77,12 +93,7 @@ def get_result_list(integer_input, input_list):
     while i + 1 < len(input_list):
         should_increase_i = True
 
-        dict_instrction = get_dict_instruction(input_list[i])
-
-        opcode = dict_instrction["opcode"]
-        first_mode = dict_instrction["first_mode"]
-        second_mode = dict_instrction["second_mode"]
-        third_mode = dict_instrction["third_mode"]
+        opcode, first_mode, second_mode, third_mode = get_instructions(input_list[i])
 
         if opcode == Opcode.ADD.value and i + 3 < len(input_list):
             first_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
