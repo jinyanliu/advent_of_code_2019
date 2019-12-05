@@ -16,10 +16,10 @@ def get_answer_to_question_1():
     list_1 = get_2_lists_of_input()[0]
     list_2 = get_2_lists_of_input()[1]
     list_of_intersection_tuples = get_intersection_tuple_list(get_list_of_route(list_1), get_list_of_route(list_2))
-    return get_closest_distance(list_of_intersection_tuples)
+    return get_distance_of_closest_intersection(list_of_intersection_tuples)
 
 
-def get_closest_distance(list_of_intersection_tuples):
+def get_distance_of_closest_intersection(list_of_intersection_tuples):
     a, b = list_of_intersection_tuples[0]
     current_result = abs(a) + abs(b)
     for tu in list_of_intersection_tuples:
@@ -33,10 +33,10 @@ def get_answer_to_question_2():
     list_1 = get_2_lists_of_input()[0]
     list_2 = get_2_lists_of_input()[1]
     list_of_intersection_tuples = get_intersection_tuple_list(get_list_of_route(list_1), get_list_of_route(list_2))
-    return get_min_steps(list_1, list_2, list_of_intersection_tuples)
+    return get_min_total_steps(list_1, list_2, list_of_intersection_tuples)
 
 
-def get_min_steps(list_1, list_2, list_intersections):
+def get_min_total_steps(list_1, list_2, list_intersections):
     dict_1 = get_intersection_steps_dict(list_1, list_intersections)
     dict_2 = get_intersection_steps_dict(list_2, list_intersections)
 
