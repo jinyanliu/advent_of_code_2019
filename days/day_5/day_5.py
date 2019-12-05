@@ -11,6 +11,10 @@ class Opcode(Enum):
     MULTIPLY = 2
     INPUT = 3
     OUTPUT = 4
+    JUMP_IF_TRUE = 5
+    JUMP_IF_FALSE = 6
+    LESS_THAN = 7
+    EQUALS = 8
     HALT = 99
 
 
@@ -87,19 +91,19 @@ def get_result_list(integer_input, input_list):
         third_mode = dict_instrction["third_mode"]
 
         if opcode == Opcode.ADD.value and i + 3 < len(input_list):
-            first_value = input_list[input_list[i + 1]] if (first_mode == 0) else input_list[
-                i + 1]
-            second_value = input_list[input_list[i + 2]] if (second_mode == 0) else input_list[
-                i + 2]
+            first_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 1]
+            second_value = input_list[input_list[i + 2]] if (second_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 2]
             replace_position = input_list[i + 3]
             input_list[replace_position] = first_value + second_value
             step = 3
 
         elif opcode == Opcode.MULTIPLY.value and i + 3 < len(input_list):
-            first_value = input_list[input_list[i + 1]] if (first_mode == 0) else input_list[
-                i + 1]
-            second_value = input_list[input_list[i + 2]] if (second_mode == 0) else input_list[
-                i + 2]
+            first_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 1]
+            second_value = input_list[input_list[i + 2]] if (second_mode == ParametersMode.POSITION.value) else \
+                input_list[i + 2]
             replace_position = input_list[i + 3]
             input_list[replace_position] = first_value * second_value
             step = 3
@@ -110,8 +114,9 @@ def get_result_list(integer_input, input_list):
             step = 1
 
         elif opcode == Opcode.OUTPUT.value:
-            output_value = input_list[input_list[i + 1]] if (first_mode == 0) else input_list[
-                i + 1]
+            output_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
+                input_list[
+                    i + 1]
             print("output_value = " + str(output_value))
             step = 1
 
