@@ -134,7 +134,6 @@ def get_output(start_index, list_of_input_integers, input_list):
             print("current_list=" + str(current_list))
             return output_value, next_start_position, current_list
 
-
         elif opcode == Opcode.JUMP_IF_TRUE.value:
             step = 2
             first_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
@@ -209,16 +208,14 @@ def get_thruster_signal(phase_setting_string):
     print("\nfifth amlifier starts...")
     amp_e_output, amp_e_next_start_index, amp_e_next_list = get_output(0, [ps5, amp_d_output], get_list_of_int_input())
 
-    for i in range(0, 10):
+    while True:
         try:
             print("\nfirst amlifier starts...")
             amp_a_output, amp_a_next_start_index, amp_a_next_list = get_output(amp_a_next_start_index, [amp_e_output],
-                                                                           amp_a_next_list)
+                                                                               amp_a_next_list)
         except TypeError:
             print("catched")
             return amp_e_output
-
-
 
         print("\nsecond amlifier starts...")
         amp_b_output, amp_b_next_start_index, amp_b_next_list = get_output(amp_b_next_start_index, [amp_a_output],
@@ -249,11 +246,10 @@ def get_thruster_signal(phase_setting_string):
             return amp_d_output
 
 
-def get_solution_1():
+def get_solution_2():
     permutation_string_list = list(map("".join, itertools.permutations('56789')))
     return max(list(map(get_thruster_signal, permutation_string_list)))
 
 
 if __name__ == "__main__":
-    print(get_solution_1())
-    #print("get_thruster_signal="+str(get_thruster_signal("97856")))
+    print(get_solution_2())
