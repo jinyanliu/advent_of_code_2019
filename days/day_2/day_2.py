@@ -48,7 +48,11 @@ def get_first_element_of_result_list(input_a, input_b, input_list):
     return get_result_list(input_a, input_b, input_list)[0]
 
 
-def get_noun_verb_calculation_result():
+def get_solution_1():
+    return get_first_element_of_result_list(12, 2, get_list_of_int_input())
+
+
+def get_solution_2():
     for noun in range(100):
         for verb in range(100):
             if get_first_element_of_result_list(noun, verb, get_list_of_int_input()) == 19690720:
@@ -57,5 +61,5 @@ def get_noun_verb_calculation_result():
 
 
 if __name__ == "__main__":
-    print(get_first_element_of_result_list(12, 2, get_list_of_int_input()))
-    print(get_noun_verb_calculation_result())
+    print(get_solution_1())
+    print(get_solution_2())
