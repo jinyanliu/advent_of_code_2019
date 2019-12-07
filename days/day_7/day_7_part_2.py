@@ -40,43 +40,11 @@ def get_list_of_int_input():
 
 
 def get_dict_instruction(digits):
-    instruction_dict = {}
-    if len(str(digits)) > 5:
-        print("Opcode more than 5 digits: " + str(digits))
-
-    if len(str(digits)) == 5:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[3] + str(digits)[4])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[2])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = int(str(digits)[1])
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = int(str(digits)[0])
-
-    elif len(str(digits)) == 4:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[2] + str(digits)[3])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[1])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = int(str(digits)[0])
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 3:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[1] + str(digits)[2])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[0])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 2:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[0] + str(digits)[1])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = 0
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 1:
-        instruction_dict[InstructionDictKey.OPCODE.value] = digits
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = 0
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 0:
-        print("Opcode is empty: " + str(digits))
-
+    instruction_string = str(digits).zfill(5)
+    instruction_dict = {InstructionDictKey.OPCODE.value: int(instruction_string[3] + instruction_string[4]),
+                        InstructionDictKey.FIRST_MODE.value: int(instruction_string[2]),
+                        InstructionDictKey.SECOND_MODE.value: int(instruction_string[1]),
+                        InstructionDictKey.THIRD_MODE.value: int(instruction_string[0])}
     return instruction_dict
 
 
@@ -192,64 +160,63 @@ def get_output(start_index, list_of_input_integers, input_list):
 
 def get_thruster_signal(phase_setting_string):
     ps1, ps2, ps3, ps4, ps5 = list(map(int, phase_setting_string))
-    amp_a_next_start_index, amp_b_next_start_index, amp_c_next_start_index, amp_d_next_start_index, amp_e_next_start_index = 0, 0, 0, 0, 0
+    amp_a_next_start_index \
+        = amp_b_next_start_index \
+        = amp_c_next_start_index \
+        = amp_d_next_start_index \
+        = amp_e_next_start_index \
+        = 0
+    amp_a_next_list \
+        = amp_b_next_list \
+        = amp_c_next_list \
+        = amp_d_next_list \
+        = amp_e_next_list \
+        = get_list_of_int_input()
 
     print("\nfirst amlifier starts...")
-    amp_a_output, amp_a_next_start_index, amp_a_next_list = get_output(amp_a_next_start_index, [ps1, 0],
-                                                                       get_list_of_int_input())
+    amp_a_output, amp_a_next_start_index, amp_a_next_list \
+        = get_output(amp_a_next_start_index, [ps1, 0], amp_a_next_list)
 
     print("\nsecond amlifier starts...")
-    amp_b_output, amp_b_next_start_index, amp_b_next_list = get_output(amp_b_next_start_index, [ps2, amp_a_output],
-                                                                       get_list_of_int_input())
+    amp_b_output, amp_b_next_start_index, amp_b_next_list \
+        = get_output(amp_b_next_start_index, [ps2, amp_a_output], amp_b_next_list)
 
     print("\nthird amlifier starts...")
-    amp_c_output, amp_c_next_start_index, amp_c_next_list = get_output(amp_c_next_start_index, [ps3, amp_b_output],
-                                                                       get_list_of_int_input())
+    amp_c_output, amp_c_next_start_index, amp_c_next_list \
+        = get_output(amp_c_next_start_index, [ps3, amp_b_output], amp_c_next_list)
 
     print("\nfourth amlifier starts...")
-    amp_d_output, amp_d_next_start_index, amp_d_next_list = get_output(amp_d_next_start_index, [ps4, amp_c_output],
-                                                                       get_list_of_int_input())
+    amp_d_output, amp_d_next_start_index, amp_d_next_list \
+        = get_output(amp_d_next_start_index, [ps4, amp_c_output], amp_d_next_list)
 
     print("\nfifth amlifier starts...")
-    amp_e_output, amp_e_next_start_index, amp_e_next_list = get_output(amp_e_next_start_index, [ps5, amp_d_output],
-                                                                       get_list_of_int_input())
+    amp_e_output, amp_e_next_start_index, amp_e_next_list \
+        = get_output(amp_e_next_start_index, [ps5, amp_d_output], amp_e_next_list)
 
     while True:
         try:
             print("\nfirst amlifier starts...")
-            amp_a_output, amp_a_next_start_index, amp_a_next_list = get_output(amp_a_next_start_index, [amp_e_output],
-                                                                               amp_a_next_list)
+            amp_a_output, amp_a_next_start_index, amp_a_next_list \
+                = get_output(amp_a_next_start_index, [amp_e_output], amp_a_next_list)
         except TypeError:
             print("catched")
             return amp_e_output
 
         print("\nsecond amlifier starts...")
-        amp_b_output, amp_b_next_start_index, amp_b_next_list = get_output(amp_b_next_start_index, [amp_a_output],
-                                                                           amp_b_next_list)
-
-        if amp_b_output is None:
-            return amp_a_output
+        amp_b_output, amp_b_next_start_index, amp_b_next_list \
+            = get_output(amp_b_next_start_index, [amp_a_output], amp_b_next_list)
 
         print("\nthird amlifier starts...")
-        amp_c_output, amp_c_next_start_index, amp_c_next_list = get_output(amp_c_next_start_index, [amp_b_output],
-                                                                           amp_c_next_list)
-
-        if amp_c_output is None:
-            return amp_b_output
+        amp_c_output, amp_c_next_start_index, amp_c_next_list \
+            = get_output(amp_c_next_start_index, [amp_b_output], amp_c_next_list)
 
         print("\nfourth amlifier starts...")
-        amp_d_output, amp_d_next_start_index, amp_d_next_list = get_output(amp_d_next_start_index, [amp_c_output],
-                                                                           amp_d_next_list)
-
-        if amp_d_output is None:
-            return amp_c_output
+        amp_d_output, amp_d_next_start_index, amp_d_next_list \
+            = get_output(amp_d_next_start_index, [amp_c_output], amp_d_next_list)
 
         print("\nfifth amlifier starts...")
-        amp_e_output, amp_e_next_start_index, amp_e_next_list = get_output(amp_e_next_start_index, [amp_d_output],
-                                                                           amp_e_next_list)
-
-        if amp_e_output is None:
-            return amp_d_output
+        amp_e_output, amp_e_next_start_index, amp_e_next_list \
+            = get_output(amp_e_next_start_index, [amp_d_output], amp_e_next_list)
 
 
 def get_solution_2():

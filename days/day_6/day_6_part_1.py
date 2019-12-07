@@ -130,8 +130,8 @@ def get_solution_1():
         path = DFS(graph, node, nodes['COM'], [], True)
         step = len(path) - 1
         total_steps += step
-        print(total_steps)
+    return total_steps
 
 
 if __name__ == "__main__":
-    get_solution_1()
+    print(get_solution_1())
