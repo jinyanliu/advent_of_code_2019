@@ -1,8 +1,9 @@
 """
-Created at 2019-12-05 19:52
+Created at 2019-12-07 13:59
 
 @author: jinyanliu
 """
+
 import itertools
 from enum import Enum
 
@@ -88,10 +89,9 @@ def get_instructions(instruction_code):
     return opcode, first_mode, second_mode, third_mode
 
 
-def get_output(list_of_input_integers, input_list):
-    i = 0
+def get_output(start_index, list_of_input_integers, input_list):
+    i = start_index
     step = 0
-    output_value = None
     while i + 1 < len(input_list):
         should_increase_i = True
 
@@ -118,6 +118,7 @@ def get_output(list_of_input_integers, input_list):
         elif opcode == Opcode.INPUT.value:
             replace_position = input_list[i + 1]
             input_list[replace_position] = list_of_input_integers[0]
+            print("input_value = " + str(list_of_input_integers[0]))
             list_of_input_integers.pop(0)
             step = 1
 
@@ -125,9 +126,14 @@ def get_output(list_of_input_integers, input_list):
             output_value = input_list[input_list[i + 1]] if (first_mode == ParametersMode.POSITION.value) else \
                 input_list[
                     i + 1]
-
-            print("output_value = " + str(output_value))
             step = 1
+            next_start_position = i + step + 1
+            current_list = input_list
+            print("output_value = " + str(output_value))
+            print("new start position = " + str(i + step + 1))
+            print("current_list=" + str(current_list))
+            return output_value, next_start_position, current_list
+
 
         elif opcode == Opcode.JUMP_IF_TRUE.value:
             step = 2
@@ -178,27 +184,76 @@ def get_output(list_of_input_integers, input_list):
             step = 3
 
         elif opcode == Opcode.HALT.value:
+            print("halt")
             break
 
         if should_increase_i:
             i += step + 1
-    return output_value
 
 
 def get_thruster_signal(phase_setting_string):
     ps1, ps2, ps3, ps4, ps5 = list(map(int, phase_setting_string))
-    first_output = get_output([ps1, 0], get_list_of_int_input())
-    second_output = get_output([ps2, first_output], get_list_of_int_input())
-    third_output = get_output([ps3, second_output], get_list_of_int_input())
-    fourth_output = get_output([ps4, third_output], get_list_of_int_input())
-    fifth_output = get_output([ps5, fourth_output], get_list_of_int_input())
-    return fifth_output
+
+    print("\nfirst amlifier starts...")
+    amp_a_output, amp_a_next_start_index, amp_a_next_list = get_output(0, [ps1, 0], get_list_of_int_input())
+
+    print("\nsecond amlifier starts...")
+    amp_b_output, amp_b_next_start_index, amp_b_next_list = get_output(0, [ps2, amp_a_output], get_list_of_int_input())
+
+    print("\nthird amlifier starts...")
+    amp_c_output, amp_c_next_start_index, amp_c_next_list = get_output(0, [ps3, amp_b_output], get_list_of_int_input())
+
+    print("\nfourth amlifier starts...")
+    amp_d_output, amp_d_next_start_index, amp_d_next_list = get_output(0, [ps4, amp_c_output], get_list_of_int_input())
+
+    print("\nfifth amlifier starts...")
+    amp_e_output, amp_e_next_start_index, amp_e_next_list = get_output(0, [ps5, amp_d_output], get_list_of_int_input())
+
+    for i in range(0, 10):
+        try:
+            print("\nfirst amlifier starts...")
+            amp_a_output, amp_a_next_start_index, amp_a_next_list = get_output(amp_a_next_start_index, [amp_e_output],
+                                                                           amp_a_next_list)
+        except TypeError:
+            print("catched")
+            return amp_e_output
+
+
+
+        print("\nsecond amlifier starts...")
+        amp_b_output, amp_b_next_start_index, amp_b_next_list = get_output(amp_b_next_start_index, [amp_a_output],
+                                                                           amp_b_next_list)
+
+        if amp_b_output is None:
+            return amp_a_output
+
+        print("\nthird amlifier starts...")
+        amp_c_output, amp_c_next_start_index, amp_c_next_list = get_output(amp_c_next_start_index, [amp_b_output],
+                                                                           amp_c_next_list)
+
+        if amp_c_output is None:
+            return amp_b_output
+
+        print("\nfourth amlifier starts...")
+        amp_d_output, amp_d_next_start_index, amp_d_next_list = get_output(amp_d_next_start_index, [amp_c_output],
+                                                                           amp_d_next_list)
+
+        if amp_d_output is None:
+            return amp_c_output
+
+        print("\nfifth amlifier starts...")
+        amp_e_output, amp_e_next_start_index, amp_e_next_list = get_output(amp_e_next_start_index, [amp_d_output],
+                                                                           amp_e_next_list)
+
+        if amp_e_output is None:
+            return amp_d_output
 
 
 def get_solution_1():
-    permutation_string_list = list(map("".join, itertools.permutations('01234')))
+    permutation_string_list = list(map("".join, itertools.permutations('56789')))
     return max(list(map(get_thruster_signal, permutation_string_list)))
 
 
 if __name__ == "__main__":
     print(get_solution_1())
+    #print("get_thruster_signal="+str(get_thruster_signal("97856")))
