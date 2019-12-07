@@ -192,21 +192,27 @@ def get_output(start_index, list_of_input_integers, input_list):
 
 def get_thruster_signal(phase_setting_string):
     ps1, ps2, ps3, ps4, ps5 = list(map(int, phase_setting_string))
+    amp_a_next_start_index, amp_b_next_start_index, amp_c_next_start_index, amp_d_next_start_index, amp_e_next_start_index = 0, 0, 0, 0, 0
 
     print("\nfirst amlifier starts...")
-    amp_a_output, amp_a_next_start_index, amp_a_next_list = get_output(0, [ps1, 0], get_list_of_int_input())
+    amp_a_output, amp_a_next_start_index, amp_a_next_list = get_output(amp_a_next_start_index, [ps1, 0],
+                                                                       get_list_of_int_input())
 
     print("\nsecond amlifier starts...")
-    amp_b_output, amp_b_next_start_index, amp_b_next_list = get_output(0, [ps2, amp_a_output], get_list_of_int_input())
+    amp_b_output, amp_b_next_start_index, amp_b_next_list = get_output(amp_b_next_start_index, [ps2, amp_a_output],
+                                                                       get_list_of_int_input())
 
     print("\nthird amlifier starts...")
-    amp_c_output, amp_c_next_start_index, amp_c_next_list = get_output(0, [ps3, amp_b_output], get_list_of_int_input())
+    amp_c_output, amp_c_next_start_index, amp_c_next_list = get_output(amp_c_next_start_index, [ps3, amp_b_output],
+                                                                       get_list_of_int_input())
 
     print("\nfourth amlifier starts...")
-    amp_d_output, amp_d_next_start_index, amp_d_next_list = get_output(0, [ps4, amp_c_output], get_list_of_int_input())
+    amp_d_output, amp_d_next_start_index, amp_d_next_list = get_output(amp_d_next_start_index, [ps4, amp_c_output],
+                                                                       get_list_of_int_input())
 
     print("\nfifth amlifier starts...")
-    amp_e_output, amp_e_next_start_index, amp_e_next_list = get_output(0, [ps5, amp_d_output], get_list_of_int_input())
+    amp_e_output, amp_e_next_start_index, amp_e_next_list = get_output(amp_e_next_start_index, [ps5, amp_d_output],
+                                                                       get_list_of_int_input())
 
     while True:
         try:
