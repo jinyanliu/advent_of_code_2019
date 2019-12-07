@@ -138,10 +138,12 @@ def get_solution_2():
     edges = get_list_of_edges_src_des()
     graph = create_graph(nodes, edges)
     path = DFS(graph, nodes['YOU'], nodes['SAN'], [], None, True)
-
-    print(len(path)-3)
-
+    print(len(path) - 3)
 
 
 if __name__ == "__main__":
     get_solution_2()
+    list_1 = [1, 2, 3]
+    list_2 = [3, 4]
+    list_3 = list_1 + list_2
+    print(list_1)
