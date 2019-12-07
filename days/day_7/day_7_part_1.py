@@ -39,43 +39,11 @@ def get_list_of_int_input():
 
 
 def get_dict_instruction(digits):
-    instruction_dict = {}
-    if len(str(digits)) > 5:
-        print("Opcode more than 5 digits: " + str(digits))
-
-    if len(str(digits)) == 5:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[3] + str(digits)[4])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[2])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = int(str(digits)[1])
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = int(str(digits)[0])
-
-    elif len(str(digits)) == 4:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[2] + str(digits)[3])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[1])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = int(str(digits)[0])
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 3:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[1] + str(digits)[2])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[0])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 2:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[0] + str(digits)[1])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = 0
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 1:
-        instruction_dict[InstructionDictKey.OPCODE.value] = digits
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = 0
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 0:
-        print("Opcode is empty: " + str(digits))
-
+    instruction_string = str(digits).zfill(5)
+    instruction_dict = {InstructionDictKey.OPCODE.value: int(instruction_string[3] + instruction_string[4]),
+                        InstructionDictKey.FIRST_MODE.value: int(instruction_string[2]),
+                        InstructionDictKey.SECOND_MODE.value: int(instruction_string[1]),
+                        InstructionDictKey.THIRD_MODE.value: int(instruction_string[0])}
     return instruction_dict
 
 

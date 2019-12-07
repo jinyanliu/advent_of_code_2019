@@ -38,43 +38,11 @@ def get_list_of_int_input():
 
 
 def get_dict_instruction(digits):
-    instruction_dict = {}
-    if len(str(digits)) > 5:
-        print("Opcode more than 5 digits: " + str(digits))
-
-    if len(str(digits)) == 5:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[3] + str(digits)[4])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[2])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = int(str(digits)[1])
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = int(str(digits)[0])
-
-    elif len(str(digits)) == 4:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[2] + str(digits)[3])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[1])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = int(str(digits)[0])
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 3:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[1] + str(digits)[2])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = int(str(digits)[0])
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 2:
-        instruction_dict[InstructionDictKey.OPCODE.value] = int(str(digits)[0] + str(digits)[1])
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = 0
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 1:
-        instruction_dict[InstructionDictKey.OPCODE.value] = digits
-        instruction_dict[InstructionDictKey.FIRST_MODE.value] = 0
-        instruction_dict[InstructionDictKey.SECOND_MODE.value] = 0
-        instruction_dict[InstructionDictKey.THIRD_MODE.value] = 0
-
-    elif len(str(digits)) == 0:
-        print("Opcode is empty: " + str(digits))
-
+    instruction_string = str(digits).zfill(5)
+    instruction_dict = {InstructionDictKey.OPCODE.value: int(instruction_string[3] + instruction_string[4]),
+                        InstructionDictKey.FIRST_MODE.value: int(instruction_string[2]),
+                        InstructionDictKey.SECOND_MODE.value: int(instruction_string[1]),
+                        InstructionDictKey.THIRD_MODE.value: int(instruction_string[0])}
     return instruction_dict
 
 
@@ -87,9 +55,10 @@ def get_instructions(instruction_code):
     return opcode, first_mode, second_mode, third_mode
 
 
-def get_result_list(integer_input, input_list):
+def get_final_output_value(integer_input, input_list):
     i = 0
     step = 0
+    output_value = 0
     while i + 1 < len(input_list):
         should_increase_i = True
 
@@ -178,14 +147,19 @@ def get_result_list(integer_input, input_list):
 
         if should_increase_i:
             i += step + 1
-    return input_list
+
+    return output_value
 
 
 def get_solution_1():
-    get_result_list(1, get_list_of_int_input())
+    return get_final_output_value(1, get_list_of_int_input())
+
+
+def get_solution_2():
+    return get_final_output_value(5, get_list_of_int_input())
 
 
 if __name__ == "__main__":
-    get_solution_1()
-    get_result_list(5, get_list_of_int_input())
+    print(get_solution_1())
+    print(get_solution_2())
     print("3"[-3:-2])
