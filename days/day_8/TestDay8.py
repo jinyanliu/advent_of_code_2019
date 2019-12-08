@@ -6,7 +6,7 @@ Created at 2019-12-08 12:45
 
 from unittest import TestCase
 
-from days.day_8.day_8 import get_solution_1
+from days.day_8.day_8_part_1 import get_solution_1
 
 
 class TestDay8(TestCase):
