@@ -62,24 +62,14 @@ def get_instructions(instruction_code):
     return opcode, first_mode, second_mode, third_mode
 
 
-def get_first_value(first_mode, input_dict, i, relative_base):
+def get_value(first_mode, input_dict, i, relative_base, number):
     if first_mode == ParametersMode.POSITION.value:
-        return input_dict[input_dict[i + 1]] if input_dict[i + 1] in input_dict.keys() else 0
+        return input_dict[input_dict[i + number]] if input_dict[i + number] in input_dict.keys() else 0
     elif first_mode == ParametersMode.IMMEDIATE.value:
-        return input_dict[i + 1]
+        return input_dict[i + number]
     elif first_mode == ParametersMode.RELATIVE.value:
-        relative_position = relative_base + input_dict[i + 1]
+        relative_position = relative_base + input_dict[i + number]
         return input_dict[relative_position]
-
-
-def get_second_value(second_mode, input_list, i, relative_base):
-    if second_mode == ParametersMode.POSITION.value:
-        return input_list[input_list[i + 2]]
-    elif second_mode == ParametersMode.IMMEDIATE.value:
-        return input_list[i + 2]
-    elif second_mode == ParametersMode.RELATIVE.value:
-        relative_position = relative_base + input_list[i + 2]
-        return input_list[relative_position]
 
 
 def get_replace_position(mode, input_list, i, relative_base, number):
@@ -100,15 +90,15 @@ def get_output(list_of_input_integers, input_dict):
         opcode, first_mode, second_mode, third_mode = get_instructions(input_dict[i])
 
         if opcode == Opcode.ADD.value and i + 3 < len(input_dict):
-            first_value = get_first_value(first_mode, input_dict, i, relative_base)
-            second_value = get_second_value(second_mode, input_dict, i, relative_base)
+            first_value = get_value(first_mode, input_dict, i, relative_base, 1)
+            second_value = get_value(second_mode, input_dict, i, relative_base, 2)
             replace_position = get_replace_position(third_mode, input_dict, i, relative_base, 3)
             input_dict[replace_position] = first_value + second_value
             step = 3
 
         elif opcode == Opcode.MULTIPLY.value and i + 3 < len(input_dict):
-            first_value = get_first_value(first_mode, input_dict, i, relative_base)
-            second_value = get_second_value(second_mode, input_dict, i, relative_base)
+            first_value = get_value(first_mode, input_dict, i, relative_base, 1)
+            second_value = get_value(second_mode, input_dict, i, relative_base, 2)
             replace_position = get_replace_position(third_mode, input_dict, i, relative_base, 3)
             input_dict[replace_position] = first_value * second_value
             step = 3
@@ -121,29 +111,29 @@ def get_output(list_of_input_integers, input_dict):
             step = 1
 
         elif opcode == Opcode.OUTPUT.value:
-            output_value = get_first_value(first_mode, input_dict, i, relative_base)
+            output_value = get_value(first_mode, input_dict, i, relative_base, 1)
             print("output_value = " + str(output_value))
             step = 1
 
         elif opcode == Opcode.JUMP_IF_TRUE.value:
             step = 2
-            first_value = get_first_value(first_mode, input_dict, i, relative_base)
+            first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             if first_value != 0:
-                second_value = get_second_value(second_mode, input_dict, i, relative_base)
+                second_value = get_value(second_mode, input_dict, i, relative_base, 2)
                 i = second_value
                 should_increase_i = False
 
         elif opcode == Opcode.JUMP_IF_FALSE.value:
             step = 2
-            first_value = get_first_value(first_mode, input_dict, i, relative_base)
+            first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             if first_value == 0:
-                second_value = get_second_value(second_mode, input_dict, i, relative_base)
+                second_value = get_value(second_mode, input_dict, i, relative_base, 2)
                 i = second_value
                 should_increase_i = False
 
         elif opcode == Opcode.LESS_THAN.value:
-            first_value = get_first_value(first_mode, input_dict, i, relative_base)
-            second_value = get_second_value(second_mode, input_dict, i, relative_base)
+            first_value = get_value(first_mode, input_dict, i, relative_base, 1)
+            second_value = get_value(second_mode, input_dict, i, relative_base, 2)
             place_to_store = get_replace_position(third_mode, input_dict, i, relative_base, 3)
 
             if first_value < second_value:
@@ -153,8 +143,8 @@ def get_output(list_of_input_integers, input_dict):
             step = 3
 
         elif opcode == Opcode.EQUALS.value:
-            first_value = get_first_value(first_mode, input_dict, i, relative_base)
-            second_value = get_second_value(second_mode, input_dict, i, relative_base)
+            first_value = get_value(first_mode, input_dict, i, relative_base, 1)
+            second_value = get_value(second_mode, input_dict, i, relative_base, 2)
             place_to_store = get_replace_position(third_mode, input_dict, i, relative_base, 3)
 
             if first_value == second_value:
@@ -164,7 +154,7 @@ def get_output(list_of_input_integers, input_dict):
             step = 3
 
         elif opcode == Opcode.RELATIVE_BASE.value:
-            first_value = get_first_value(first_mode, input_dict, i, relative_base)
+            first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             relative_base += first_value
             step = 1
 
