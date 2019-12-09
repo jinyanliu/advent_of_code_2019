@@ -33,15 +33,15 @@ class InstructionDictKey(Enum):
 
 
 def get_dict_of_int_input():
-    list_of_dict = {}
+    dict_of_int_input = {}
     i = 0
     with open("day_9_input") as lines:
         list_of_string = lines.readline().split(',')
         for s in list_of_string:
-            list_of_dict[i] = int(s)
+            dict_of_int_input[i] = int(s)
             i += 1
-    print(list_of_dict)
-    return list_of_dict
+    print(dict_of_int_input)
+    return dict_of_int_input
 
 
 def get_dict_instruction(digits):
@@ -62,21 +62,21 @@ def get_instructions(instruction_code):
     return opcode, first_mode, second_mode, third_mode
 
 
-def get_value(first_mode, input_dict, i, relative_base, number):
-    if first_mode == ParametersMode.POSITION.value:
+def get_value(mode, input_dict, i, relative_base, number):
+    if mode == ParametersMode.POSITION.value:
         return input_dict[input_dict[i + number]] if input_dict[i + number] in input_dict.keys() else 0
-    elif first_mode == ParametersMode.IMMEDIATE.value:
+    elif mode == ParametersMode.IMMEDIATE.value:
         return input_dict[i + number]
-    elif first_mode == ParametersMode.RELATIVE.value:
+    elif mode == ParametersMode.RELATIVE.value:
         relative_position = relative_base + input_dict[i + number]
         return input_dict[relative_position]
 
 
-def get_replace_position(mode, input_list, i, relative_base, number):
+def get_replace_position(mode, input_dict, i, relative_base, number):
     if mode == ParametersMode.POSITION.value:
-        return input_list[i + number]
+        return input_dict[i + number]
     elif mode == ParametersMode.RELATIVE.value:
-        return relative_base + input_list[i + number]
+        return relative_base + input_dict[i + number]
 
 
 def get_output(list_of_input_integers, input_dict):
