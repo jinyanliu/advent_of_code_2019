@@ -164,7 +164,6 @@ def get_output(list_of_input_integers, input_dict):
             step = 3
 
         elif opcode == Opcode.RELATIVE_BASE.value:
-
             first_value = get_first_value(first_mode, input_dict, i, relative_base)
             relative_base += first_value
             step = 1
@@ -181,5 +180,10 @@ def get_solution_1():
     return get_output([1], get_dict_of_int_input())
 
 
+def get_solution_2():
+    return get_output([2], get_dict_of_int_input())
+
+
 if __name__ == "__main__":
     print(get_solution_1())
+    print(get_solution_2())
