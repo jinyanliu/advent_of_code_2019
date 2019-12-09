@@ -79,7 +79,7 @@ def get_replace_position(mode, input_dict, i, relative_base, number):
         return relative_base + input_dict[i + number]
 
 
-def get_output(list_of_input_integers, input_dict):
+def get_last_output(list_of_input_integers, input_dict):
     i = 0
     step = 0
     output_value = None
@@ -89,14 +89,14 @@ def get_output(list_of_input_integers, input_dict):
 
         opcode, first_mode, second_mode, third_mode = get_instructions(input_dict[i])
 
-        if opcode == Opcode.ADD.value and i + 3 < len(input_dict):
+        if opcode == Opcode.ADD.value:
             first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             second_value = get_value(second_mode, input_dict, i, relative_base, 2)
             replace_position = get_replace_position(third_mode, input_dict, i, relative_base, 3)
             input_dict[replace_position] = first_value + second_value
             step = 3
 
-        elif opcode == Opcode.MULTIPLY.value and i + 3 < len(input_dict):
+        elif opcode == Opcode.MULTIPLY.value:
             first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             second_value = get_value(second_mode, input_dict, i, relative_base, 2)
             replace_position = get_replace_position(third_mode, input_dict, i, relative_base, 3)
@@ -116,26 +116,25 @@ def get_output(list_of_input_integers, input_dict):
             step = 1
 
         elif opcode == Opcode.JUMP_IF_TRUE.value:
-            step = 2
             first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             if first_value != 0:
                 second_value = get_value(second_mode, input_dict, i, relative_base, 2)
                 i = second_value
                 should_increase_i = False
+            step = 2
 
         elif opcode == Opcode.JUMP_IF_FALSE.value:
-            step = 2
             first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             if first_value == 0:
                 second_value = get_value(second_mode, input_dict, i, relative_base, 2)
                 i = second_value
                 should_increase_i = False
+            step = 2
 
         elif opcode == Opcode.LESS_THAN.value:
             first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             second_value = get_value(second_mode, input_dict, i, relative_base, 2)
             place_to_store = get_replace_position(third_mode, input_dict, i, relative_base, 3)
-
             if first_value < second_value:
                 input_dict[place_to_store] = 1
             else:
@@ -146,7 +145,6 @@ def get_output(list_of_input_integers, input_dict):
             first_value = get_value(first_mode, input_dict, i, relative_base, 1)
             second_value = get_value(second_mode, input_dict, i, relative_base, 2)
             place_to_store = get_replace_position(third_mode, input_dict, i, relative_base, 3)
-
             if first_value == second_value:
                 input_dict[place_to_store] = 1
             else:
@@ -167,11 +165,11 @@ def get_output(list_of_input_integers, input_dict):
 
 
 def get_solution_1():
-    return get_output([1], get_dict_of_int_input())
+    return get_last_output([1], get_dict_of_int_input())
 
 
 def get_solution_2():
-    return get_output([2], get_dict_of_int_input())
+    return get_last_output([2], get_dict_of_int_input())
 
 
 if __name__ == "__main__":
