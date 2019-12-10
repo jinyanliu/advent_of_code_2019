@@ -3,6 +3,7 @@ Created at 2019-12-10 20:29
 
 @author: jinyanliu
 """
+from enum import Enum
 
 """
 Created at 2019-12-10 18:21
@@ -10,6 +11,17 @@ Created at 2019-12-10 18:21
 @author: jinyanliu
 """
 import math
+
+
+class Step(Enum):
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
+    SIX = 6
+    SEVEN = 7
+    EIGHT = 8
 
 
 def get_list_of_input_tuple():
@@ -26,29 +38,81 @@ def get_list_of_input_tuple():
     return list_of_input_tuple
 
 
-def get_tuple_sensor_count(base_tuple):
-    list_of_different_angle = []
+def get_dict_of_different_angles(base_tuple):
+    dict_of_different_angle = {}
     basex, basey = base_tuple
     new_list = get_list_of_input_tuple()[:]
     new_list.remove(base_tuple)
     for tuple in new_list:
         currentx, currenty = tuple
         offsetx, offsety = basex - currentx, basey - currenty
-        print(offsetx, offsety)
         current_offset_gcd = math.gcd(offsetx, offsety)
-        offsetx, offsety = offsetx / current_offset_gcd, offsety / current_offset_gcd
-        current_tuple = (offsetx, offsety)
-        if current_tuple not in list_of_different_angle:
-            list_of_different_angle.append(current_tuple)
-    return len(list_of_different_angle)
+        keyoffsetx, keyoffsety = offsetx / current_offset_gcd, offsety / current_offset_gcd
+        tuple_key = (keyoffsetx, keyoffsety)
+
+        if tuple_key not in dict_of_different_angle.keys():
+            dict_of_different_angle[tuple_key] = [(currentx, currenty)]
+        else:
+            dict_of_different_angle[tuple_key].append((currentx, currenty))
+            dict_of_different_angle[tuple_key] = sorted(dict_of_different_angle[tuple_key], key=lambda x: abs(basex-x[0]))
+            dict_of_different_angle[tuple_key] = sorted(dict_of_different_angle[tuple_key], key=lambda x: abs(basey-x[1]))
+    print(dict_of_different_angle)
+    return dict_of_different_angle
+
+
+def get_dict_of_steps(offset_key_of_dict_of_different_angles):
+    dict_of_steps = {Step.ONE.value: [], Step.TWO.value: [], Step.THREE.value: [], Step.FOUR.value: [],
+                     Step.FIVE.value: [], Step.SIX.value: [], Step.SEVEN.value: [], Step.EIGHT.value: []}
+
+    for offset_key in offset_key_of_dict_of_different_angles:
+        offset_key_x, offset_key_y = offset_key
+
+        if offset_key_x == 0 and offset_key_y > 0:
+            dict_of_steps[Step.ONE.value].append((offset_key_x, offset_key_y))
+        elif offset_key_x < 0 and offset_key_y > 0:
+            dict_of_steps[Step.TWO.value].append((offset_key_x, offset_key_y))
+        elif offset_key_x < 0 and offset_key_y == 0:
+            dict_of_steps[Step.THREE.value].append((offset_key_x, offset_key_y))
+        elif offset_key_x < 0 and offset_key_y < 0:
+            dict_of_steps[Step.FOUR.value].append((offset_key_x, offset_key_y))
+        elif offset_key_x == 0 and offset_key_y < 0:
+            dict_of_steps[Step.FIVE.value].append((offset_key_x, offset_key_y))
+        elif offset_key_x > 0 and offset_key_y < 0:
+            dict_of_steps[Step.SIX.value].append((offset_key_x, offset_key_y))
+        elif offset_key_x > 0 and offset_key_y == 0:
+            dict_of_steps[Step.SEVEN.value].append((offset_key_x, offset_key_y))
+        elif offset_key_x > 0 and offset_key_y > 0:
+            dict_of_steps[Step.EIGHT.value].append((offset_key_x, offset_key_y))
+
+    # y become smaller
+    dict_of_steps[Step.ONE.value] = sorted(dict_of_steps[Step.ONE.value], key=lambda x: abs(x[1]), reverse=True)
+    # offset ratio become bigger
+    dict_of_steps[Step.TWO.value] = sorted(dict_of_steps[Step.TWO.value], key=lambda x: abs(x[0] / x[1]))
+    # x become bigger
+    dict_of_steps[Step.THREE.value] = sorted(dict_of_steps[Step.THREE.value], key=lambda x: abs(x[0]))
+    # offset ratio become smaller
+    dict_of_steps[Step.FOUR.value] = sorted(dict_of_steps[Step.FOUR.value], key=lambda x: abs(x[0] / x[1]),
+                                            reverse=True)
+    # y become bigger
+    dict_of_steps[Step.FIVE.value] = sorted(dict_of_steps[Step.FIVE.value], key=lambda x: abs(x[1]))
+    # offset ratio become bigger
+    dict_of_steps[Step.SIX.value] = sorted(dict_of_steps[Step.SIX.value], key=lambda x: abs(x[0] / x[1]))
+    # x become smaller
+    dict_of_steps[Step.SEVEN.value] = sorted(dict_of_steps[Step.SEVEN.value], key=lambda x: abs(x[0]), reverse=True)
+    # offset ratio become smaller
+    dict_of_steps[Step.EIGHT.value] = sorted(dict_of_steps[Step.EIGHT.value], key=lambda x: abs(x[0] / x[1]),
+                                             reverse=True)
+
+    print(dict_of_steps)
+    return dict_of_steps
 
 
 def find_the_sensor():
     map_of_asteroids = get_list_of_input_tuple()
-    max_count = get_tuple_sensor_count(map_of_asteroids[0])
+    max_count = len(get_dict_of_different_angles(map_of_asteroids[0]))
     best_asteroid = get_list_of_input_tuple()[0]
     for single_tuple in map_of_asteroids:
-        current_count = get_tuple_sensor_count(single_tuple)
+        current_count = len(get_dict_of_different_angles(single_tuple))
         if current_count > max_count:
             max_count = current_count
             best_asteroid = single_tuple
@@ -56,12 +120,31 @@ def find_the_sensor():
     print(best_asteroid)
 
 
-def get_solution_1():
-    return max(list(map(get_tuple_sensor_count, get_list_of_input_tuple())))
+def is_all_empty():
+    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles((8, 3)).keys())
+    for key in dict_of_steps:
+        tuple_key_list = dict_of_steps[key]
+        for tuple_key in tuple_key_list:
+            if (len(key_offset_and_real_offset_dict[tuple_key]) > 0):
+                return False
+    return True
 
 
 if __name__ == "__main__":
-    #print(get_solution_1())
-    #find_the_sensor()
+    # find_the_sensor()
+    # print(max(list(map(get_tuple_sensor_count, get_list_of_input_tuple()))))
+    # get_dict_of_different_angles((8, 3))
+    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles((8, 3)).keys())
+    key_offset_and_real_offset_dict = get_dict_of_different_angles((8, 3))
 
-    get_tuple_sensor_count((8,3))
+    deletion_dict = {}
+    i = -1
+    while (not is_all_empty()):
+        for key in dict_of_steps:
+            tuple_key_list = dict_of_steps[key]
+            for tuple_key in tuple_key_list:
+                if (len(key_offset_and_real_offset_dict[tuple_key]) > 0):
+                    i += 1
+                    deletion_dict[i] = key_offset_and_real_offset_dict[tuple_key].pop(0)
+
+    print(deletion_dict)
