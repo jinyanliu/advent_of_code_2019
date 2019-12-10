@@ -4,12 +4,6 @@ Created at 2019-12-10 20:29
 @author: jinyanliu
 """
 from enum import Enum
-
-"""
-Created at 2019-12-10 18:21
-
-@author: jinyanliu
-"""
 import math
 
 
@@ -120,32 +114,33 @@ def find_the_best_asteroid():
     return best_asteroid
 
 
-def is_all_empty():
-    best_asteroid = find_the_best_asteroid()
-    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles(best_asteroid).keys())
+def is_all_empty(key_offset_and_real_offset_dict, dict_of_steps):
     for key in dict_of_steps:
         tuple_key_list = dict_of_steps[key]
         for tuple_key in tuple_key_list:
-            if (len(key_offset_and_real_offset_dict[tuple_key]) > 0):
+            if len(key_offset_and_real_offset_dict[tuple_key]) > 0:
                 return False
     return True
 
 
-if __name__ == "__main__":
+def get_solution_2():
     best_asteroid = find_the_best_asteroid()
-
-    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles(best_asteroid).keys())
     key_offset_and_real_offset_dict = get_dict_of_different_angles(best_asteroid)
+    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles(best_asteroid).keys())
 
     deletion_dict = {}
     i = 0
-    while (not is_all_empty()):
+    while not is_all_empty(key_offset_and_real_offset_dict, dict_of_steps):
         for key in dict_of_steps:
             tuple_key_list = dict_of_steps[key]
             for tuple_key in tuple_key_list:
-                if (len(key_offset_and_real_offset_dict[tuple_key]) > 0):
+                if len(key_offset_and_real_offset_dict[tuple_key]) > 0:
                     i += 1
                     deletion_dict[i] = key_offset_and_real_offset_dict[tuple_key].pop(0)
 
     print(deletion_dict)
     print(deletion_dict[200])
+
+
+if __name__ == "__main__":
+    get_solution_2()
