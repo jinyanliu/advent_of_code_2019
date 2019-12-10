@@ -26,7 +26,7 @@ class Step(Enum):
 
 def get_list_of_input_tuple():
     list_of_input_tuple = []
-    with open("day_10_test_input_6") as lines:
+    with open("day_10_input") as lines:
         y = 0
         for line in lines:
             x = 0
@@ -54,9 +54,10 @@ def get_dict_of_different_angles(base_tuple):
             dict_of_different_angle[tuple_key] = [(currentx, currenty)]
         else:
             dict_of_different_angle[tuple_key].append((currentx, currenty))
-            dict_of_different_angle[tuple_key] = sorted(dict_of_different_angle[tuple_key], key=lambda x: abs(basex-x[0]))
-            dict_of_different_angle[tuple_key] = sorted(dict_of_different_angle[tuple_key], key=lambda x: abs(basey-x[1]))
-    print(dict_of_different_angle)
+            dict_of_different_angle[tuple_key] = sorted(dict_of_different_angle[tuple_key],
+                                                        key=lambda x: abs(basex - x[0]))
+            dict_of_different_angle[tuple_key] = sorted(dict_of_different_angle[tuple_key],
+                                                        key=lambda x: abs(basey - x[1]))
     return dict_of_different_angle
 
 
@@ -102,12 +103,10 @@ def get_dict_of_steps(offset_key_of_dict_of_different_angles):
     # offset ratio become smaller
     dict_of_steps[Step.EIGHT.value] = sorted(dict_of_steps[Step.EIGHT.value], key=lambda x: abs(x[0] / x[1]),
                                              reverse=True)
-
-    print(dict_of_steps)
     return dict_of_steps
 
 
-def find_the_sensor():
+def find_the_best_asteroid():
     map_of_asteroids = get_list_of_input_tuple()
     max_count = len(get_dict_of_different_angles(map_of_asteroids[0]))
     best_asteroid = get_list_of_input_tuple()[0]
@@ -116,12 +115,14 @@ def find_the_sensor():
         if current_count > max_count:
             max_count = current_count
             best_asteroid = single_tuple
-    print(max_count)
-    print(best_asteroid)
+    print("best asteroid's max count=" + str(max_count))
+    print("best asteroid=" + str(best_asteroid))
+    return best_asteroid
 
 
 def is_all_empty():
-    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles((8, 3)).keys())
+    best_asteroid = find_the_best_asteroid()
+    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles(best_asteroid).keys())
     for key in dict_of_steps:
         tuple_key_list = dict_of_steps[key]
         for tuple_key in tuple_key_list:
@@ -131,14 +132,13 @@ def is_all_empty():
 
 
 if __name__ == "__main__":
-    # find_the_sensor()
-    # print(max(list(map(get_tuple_sensor_count, get_list_of_input_tuple()))))
-    # get_dict_of_different_angles((8, 3))
-    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles((8, 3)).keys())
-    key_offset_and_real_offset_dict = get_dict_of_different_angles((8, 3))
+    best_asteroid = find_the_best_asteroid()
+
+    dict_of_steps = get_dict_of_steps(get_dict_of_different_angles(best_asteroid).keys())
+    key_offset_and_real_offset_dict = get_dict_of_different_angles(best_asteroid)
 
     deletion_dict = {}
-    i = -1
+    i = 0
     while (not is_all_empty()):
         for key in dict_of_steps:
             tuple_key_list = dict_of_steps[key]
@@ -148,3 +148,4 @@ if __name__ == "__main__":
                     deletion_dict[i] = key_offset_and_real_offset_dict[tuple_key].pop(0)
 
     print(deletion_dict)
+    print(deletion_dict[200])
