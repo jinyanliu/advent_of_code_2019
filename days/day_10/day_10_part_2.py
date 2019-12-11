@@ -140,7 +140,9 @@ def get_solution_2():
 
     print(deletion_dict)
     print(deletion_dict[200])
+    a, b = deletion_dict[200]
+    return 100 * a + b
 
 
 if __name__ == "__main__":
-    get_solution_2()
+    print(get_solution_2())
