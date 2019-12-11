@@ -29,7 +29,8 @@ def get_tuple_sensor_count(base_tuple):
         currentx, currenty = tuple
         offsetx, offsety = basex - currentx, basey - currenty
         current_offset_gcd = math.gcd(offsetx, offsety)
-        offsetx, offsety = offsetx / current_offset_gcd, offsety / current_offset_gcd
+        # Here we want to avoid using float. Float is unreliable at comparison.
+        offsetx, offsety = offsetx // current_offset_gcd, offsety // current_offset_gcd
         current_tuple = (offsetx, offsety)
         if current_tuple not in list_of_different_angle:
             list_of_different_angle.append(current_tuple)

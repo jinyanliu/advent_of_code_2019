@@ -3,6 +3,7 @@ Created at 2019-12-10 20:29
 
 @author: jinyanliu
 """
+import functools
 from enum import Enum
 import math
 
@@ -41,7 +42,8 @@ def get_dict_of_different_angles(base_tuple):
         currentx, currenty = tuple
         offsetx, offsety = basex - currentx, basey - currenty
         current_offset_gcd = math.gcd(offsetx, offsety)
-        keyoffsetx, keyoffsety = offsetx / current_offset_gcd, offsety / current_offset_gcd
+        # Here we want to avoid using float. Float is unreliable at comparison.
+        keyoffsetx, keyoffsety = offsetx // current_offset_gcd, offsety // current_offset_gcd
         tuple_key = (keyoffsetx, keyoffsety)
 
         if tuple_key not in dict_of_different_angle.keys():
@@ -82,11 +84,11 @@ def get_dict_of_steps(offset_key_of_dict_of_different_angles):
     # y become smaller
     dict_of_steps[Step.ONE.value] = sorted(dict_of_steps[Step.ONE.value], key=lambda x: abs(x[1]), reverse=True)
     # offset ratio become bigger
-    dict_of_steps[Step.TWO.value] = sorted(dict_of_steps[Step.TWO.value], key=lambda x: abs(x[0] / x[1]))
+    dict_of_steps[Step.TWO.value] = sorted(dict_of_steps[Step.TWO.value], key=functools.cmp_to_key(compare))
     # x become bigger
     dict_of_steps[Step.THREE.value] = sorted(dict_of_steps[Step.THREE.value], key=lambda x: abs(x[0]))
     # offset ratio become smaller
-    dict_of_steps[Step.FOUR.value] = sorted(dict_of_steps[Step.FOUR.value], key=lambda x: abs(x[0] / x[1]),
+    dict_of_steps[Step.FOUR.value] = sorted(dict_of_steps[Step.FOUR.value], key=functools.cmp_to_key(compare),
                                             reverse=True)
     # y become bigger
     dict_of_steps[Step.FIVE.value] = sorted(dict_of_steps[Step.FIVE.value], key=lambda x: abs(x[1]))
@@ -144,5 +146,23 @@ def get_solution_2():
     return 100 * a + b
 
 
+def compare(item1, item2):
+    item1x, item1y = item1
+    item2x, item2y = item2
+    if item1x * item2y < item2x * item1y:
+        return -1
+    elif item1x * item2y > item2x * item1y:
+        return 1
+    else:
+        return 0
+
+
 if __name__ == "__main__":
     print(get_solution_2())
+
+    list_of_tuple = [(1, 2), (3, 4), (7, 1), (1, 5), (6, 1), (3, 3)]
+    # list_of_tuple_1 is better than list_of_tuple_2 is because it avoids comparing float. Float comparison is not reliable.
+    list_of_tuple_1 = sorted(list_of_tuple, key=functools.cmp_to_key(compare))
+    list_of_tuple_2 = sorted(list_of_tuple, key=lambda x: abs(x[0] / x[1]))
+    print(list_of_tuple_1)
+    print(list_of_tuple_2)
