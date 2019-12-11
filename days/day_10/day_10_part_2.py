@@ -149,12 +149,7 @@ def get_solution_2():
 def compare(item1, item2):
     item1x, item1y = item1
     item2x, item2y = item2
-    if item1x * item2y < item2x * item1y:
-        return -1
-    elif item1x * item2y > item2x * item1y:
-        return 1
-    else:
-        return 0
+    return item1x * item2y - item2x * item1y
 
 
 if __name__ == "__main__":

@@ -136,7 +136,7 @@ def plot_message(dict_of_paint_on_location):
             list_of_message_panel.append(key)
 
     a, b = zip(*list_of_message_panel)
-    plt.scatter(a, b)
+    plt.scatter(a, b, c='orange', marker="*", s=150)
     plt.show()
 
 
