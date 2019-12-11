@@ -44,6 +44,11 @@ class DirectionValue(Enum):
     RIGHT = 1
 
 
+class Color(Enum):
+    BLACK = 0
+    WHITE = 1
+
+
 def get_dict_of_int_input():
     dict_of_int_input = {}
     i = 0
@@ -93,6 +98,7 @@ def get_replace_position(mode, input_dict, i, relative_base, number):
 
 def get_end_location_and_direction(direction_indicator, start_location, start_direction):
     startx, starty = start_location
+    end_location, end_direction = start_location, start_direction
     if direction_indicator == DirectionValue.LEFT.value:
         if start_direction == PaintRobotDirection.UP.value:
             end_location = (startx - 1, starty)
@@ -151,7 +157,7 @@ def get_unique_painted_locations_count(input_dict):
 
         elif opcode == Opcode.INPUT.value:
 
-            input_value = 0
+            input_value = Color.BLACK.value
             if current_location in dict_of_paint_on_location.keys():
                 input_value = dict_of_paint_on_location[current_location]
 
