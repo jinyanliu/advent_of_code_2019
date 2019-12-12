@@ -42,10 +42,9 @@ def init_moons():
 
 
 def adjust_moons(moon_1, moon_2, moon_3, moon_4):
+    list_of_moons = [moon_1, moon_2, moon_3, moon_4]
+
     for i in range(0, 1000):
-
-        list_of_moons = [moon_1, moon_2, moon_3, moon_4]
-
         for outside_moon in list_of_moons:
             for inside_moon in list_of_moons:
                 if not outside_moon == inside_moon:
