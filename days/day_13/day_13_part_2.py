@@ -95,12 +95,13 @@ def get_replace_position(mode, input_dict, i, relative_base, number):
         return relative_base + input_dict[i + number]
 
 
-def get_block_count(input_dict):
+def get_score(input_dict):
     i = 0
     step = 0
     relative_base = 0
     one_time_output_value = []
     dict_of_paint_on_location = {}
+    score = 0
 
     while i + 1 < len(input_dict):
         should_increase_i = True
@@ -152,6 +153,7 @@ def get_block_count(input_dict):
                 y = one_time_output_value[1]
                 drawing_or_score = one_time_output_value[2]
                 if x == -1 and y == 0:
+                    score = drawing_or_score
                     print("Current Score is=" + str(drawing_or_score))
                 else:
                     dict_of_paint_on_location[(x, -y)] = drawing_or_score
@@ -206,7 +208,7 @@ def get_block_count(input_dict):
         if should_increase_i:
             i += step + 1
 
-    plot_message(dict_of_paint_on_location)
+    #plot_message(dict_of_paint_on_location)
 
     print(dict_of_paint_on_location)
 
@@ -214,7 +216,8 @@ def get_block_count(input_dict):
     for value in dict_of_paint_on_location.values():
         if value == Drawing.BLOCK.value:
             count_block += 1
-    return count_block
+    print("count of block is:" + str(count_block))
+    return score
 
 
 def plot_message(dict_of_paint_on_location):
@@ -259,9 +262,9 @@ def plot_message(dict_of_paint_on_location):
     matplotlib.pyplot.show()
 
 
-def get_solution_1():
-    return get_block_count(get_dict_of_int_input())
+def get_solution_2():
+    return get_score(get_dict_of_int_input())
 
 
 if __name__ == "__main__":
-    print(get_solution_1())
+    print(get_solution_2())
