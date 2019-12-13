@@ -199,9 +199,9 @@ def get_block_count(input_dict):
     return count_block
 
 
-def get_solution_2():
+def get_solution_1():
     return get_block_count(get_dict_of_int_input())
 
 
 if __name__ == "__main__":
-    print(get_solution_2())
+    print(get_solution_1())
