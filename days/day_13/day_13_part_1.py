@@ -4,6 +4,7 @@ Created at 2019-12-13 17:58
 @author: jinyanliu
 """
 from enum import Enum
+import matplotlib.pyplot
 
 
 class Opcode(Enum):
@@ -138,7 +139,7 @@ def get_block_count(input_dict):
                 y = one_time_output_value[1]
                 drawing = one_time_output_value[2]
                 # print("output_value_list = " + str(one_time_output_value))
-                dict_of_paint_on_location[(x, y)] = drawing
+                dict_of_paint_on_location[(x, -y)] = drawing
                 one_time_output_value = []
 
             step = 1
@@ -191,12 +192,46 @@ def get_block_count(input_dict):
             i += step + 1
 
     print(dict_of_paint_on_location)
+    plot_message(dict_of_paint_on_location)
 
     count_block = 0
     for value in dict_of_paint_on_location.values():
         if value == Drawing.BLOCK.value:
             count_block += 1
     return count_block
+
+
+def plot_message(dict_of_paint_on_location):
+    list_of_empty = []
+    list_of_wall = []
+    list_of_block = []
+    list_of_horizontal_paddle = []
+    list_of_ball = []
+
+    for key, value in dict_of_paint_on_location.items():
+        if value == Drawing.EMPTY.value:
+            list_of_empty.append(key)
+        if value == Drawing.WALL.value:
+            list_of_wall.append(key)
+        if value == Drawing.BLOCK.value:
+            list_of_block.append(key)
+        if value == Drawing.HORIZONTAL_PADDLE.value:
+            list_of_horizontal_paddle.append(key)
+        if value == Drawing.BALL.value:
+            list_of_ball.append(key)
+
+    a, b = zip(*list_of_block)
+    c, d = zip(*list_of_horizontal_paddle)
+    e, f = zip(*list_of_ball)
+    g, h = zip(*list_of_empty)
+    i, j = zip(*list_of_wall)
+    matplotlib.pyplot.scatter(a, b, c='gray', marker="X", s=20)
+    matplotlib.pyplot.scatter(c, d, c='green', marker="_", s=20)
+    matplotlib.pyplot.scatter(e, f, c='red', marker="8", s=20)
+    matplotlib.pyplot.scatter(g, h, c='pink', marker="4", s=20)
+    matplotlib.pyplot.scatter(i, j, c='black', marker="s", s=20)
+
+    matplotlib.pyplot.show()
 
 
 def get_solution_1():
