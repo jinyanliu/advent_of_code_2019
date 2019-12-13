@@ -96,7 +96,6 @@ def get_replace_position(mode, input_dict, i, relative_base, number):
 
 
 def get_block_count(input_dict):
-    # matplotlib.pyplot.axis([0, 45, 0, -25])
     i = 0
     step = 0
     relative_base = 0
