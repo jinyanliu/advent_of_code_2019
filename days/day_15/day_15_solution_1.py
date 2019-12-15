@@ -176,7 +176,7 @@ def get_input(current_location, dict_of_paint_on_location):
         return Direction.LEFT.value
 
 
-def get_unique_painted_locations_count(input_dict):
+def get_empty_count(input_dict):
     i = 0
     step = 0
     relative_base = 0
@@ -219,7 +219,7 @@ def get_unique_painted_locations_count(input_dict):
 
         elif opcode == Opcode.OUTPUT.value:
             output_value = get_value(first_mode, input_dict, i, relative_base, 1)
-            print("output_value = " + str(output_value))
+            #print("output_value = " + str(output_value))
 
             if output_value == OutputStatus.WALL.value:
                 # current location is not changed
@@ -229,23 +229,15 @@ def get_unique_painted_locations_count(input_dict):
                 dict_of_paint_on_location[wall_location] = "wall"
                 dict_of_graph_on_location[wall_location] = "wall"
                 # plot_message(dict_of_paint_on_location)
-            elif output_value == OutputStatus.MOVE.value:
 
-                new_location = get_new_location(current_location, current_direction)
-                if (new_location in dict_of_paint_on_location.keys()) and (
-                        dict_of_paint_on_location[new_location] == "wall"):
-                    # current location is not changed
-                    current_location = current_location
-                    #print("current_position=" + str(current_location))
-                    wall_location = get_new_location(current_location, current_direction)
-                    dict_of_paint_on_location[wall_location] = "wall"
-                    # plot_message(dict_of_paint_on_location)
-                else:
-                    current_location = get_new_location(current_location, current_direction)
-                    #print("current_position=" + str(current_location))
-                    dict_of_paint_on_location[current_location] = "empty"
-                    dict_of_graph_on_location[current_location] = "empty"
-                    # plot_message(dict_of_paint_on_location)
+            elif output_value == OutputStatus.MOVE.value:
+                current_location = get_new_location(current_location, current_direction)
+                #print("current_position=" + str(current_location))
+                dict_of_paint_on_location[current_location] = "empty"
+                dict_of_graph_on_location[current_location] = "empty"
+                # plot_message(dict_of_paint_on_location)
+
+
             elif output_value == OutputStatus.FOUND.value:
                 #print("current_position=" + str(current_location))
                 current_location = target_location = get_new_location(current_location, current_direction)
@@ -340,6 +332,7 @@ def get_unique_painted_locations_count(input_dict):
 
     for key, value in dict_of_paint_on_location.items():
         if value == "start":
+            # start point has been overwritten as "wall" by me
             print("start location= " + str(key))
         if value == "target":
             print("target location= " + str(key))
@@ -363,7 +356,7 @@ def get_unique_painted_locations_count(input_dict):
 
 
 def get_solution_1():
-    return get_unique_painted_locations_count(get_dict_of_int_input())
+    return get_empty_count(get_dict_of_int_input())
 
 
 if __name__ == "__main__":
