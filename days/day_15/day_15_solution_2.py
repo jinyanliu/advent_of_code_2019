@@ -356,12 +356,12 @@ def get_oxygen_step(input_dict):
     # this is puzzle graph, doesn't have customized block
     dict_of_graph_on_location[(0, 0)] = "start"
 
-    #plot_message(dict_of_graph_on_location)
-    #plot_message(dict_of_paint_on_location)
+    plot_message(dict_of_graph_on_location)
+    plot_message(dict_of_paint_on_location)
 
     dict_of_graph_on_location[(0, 0)] = "empty"
     dict_of_graph_on_location[(12, -12)] = "oxygen"
-    #plot_message(dict_of_graph_on_location)
+    plot_message(dict_of_graph_on_location)
 
     oxygen_step = 0
     list_of_oxygen_tuple = [(12, -12)]
@@ -398,7 +398,7 @@ def get_oxygen_step(input_dict):
         else:
             should_run = False
 
-    #plot_message(dict_of_graph_on_location)
+    plot_message(dict_of_graph_on_location)
 
     return oxygen_step
 

@@ -29,3 +29,5 @@ set_1 = set()
 set_1.add(2)
 set_1.clear()
 print(set_1)
+
+print(bool(0))
