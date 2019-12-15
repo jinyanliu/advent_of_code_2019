@@ -343,9 +343,9 @@ def get_empty_count(input_dict):
     dict_of_graph_on_location[(0, 0)] = "start"
 
     # puzzle graph without customized wall
-    plot_message(dict_of_graph_on_location)
+    #plot_message(dict_of_graph_on_location)
     # mine graph with customized wall
-    plot_message(dict_of_paint_on_location)
+    #plot_message(dict_of_paint_on_location)
 
     empty_count = 0
     for key, value in dict_of_paint_on_location.items():
