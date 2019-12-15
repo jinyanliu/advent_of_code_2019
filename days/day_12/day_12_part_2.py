@@ -3,6 +3,11 @@ Created at 2019-12-12 23:25
 
 @author: jinyanliu
 """
+from functools import reduce
+from math import gcd
+
+import numpy as np
+from numpy.core._multiarray_umath import lcm
 
 
 class Moon:
@@ -24,32 +29,65 @@ class Moon:
 
 
 def init_moons():
-    #moon_1 = Moon(-1, 0, 2, 0, 0, 0)
-    #moon_2 = Moon(2, -10, -7, 0, 0, 0)
-    #moon_3 = Moon(4, -8, 8, 0, 0, 0)
-    #moon_4 = Moon(3, 5, -1, 0, 0, 0)
+    moon_1 = Moon(-1, 0, 2, 0, 0, 0)
+    moon_2 = Moon(2, -10, -7, 0, 0, 0)
+    moon_3 = Moon(4, -8, 8, 0, 0, 0)
+    moon_4 = Moon(3, 5, -1, 0, 0, 0)
 
     # moon_1 = Moon(-8, -10, 0, 0, 0, 0)
     # moon_2 = Moon(5, 5, 10, 0, 0, 0)
     # moon_3 = Moon(2, -7, 3, 0, 0, 0)
     # moon_4 = Moon(9, -8, -3, 0, 0, 0)
 
-    moon_1 = Moon(4, 1, 1, 0, 0, 0)
-    moon_2 = Moon(11, -18, -1, 0, 0, 0)
-    moon_3 = Moon(-2, -10, -4, 0, 0, 0)
-    moon_4 = Moon(-7, -2, 14, 0, 0, 0)
+    # moon_1 = Moon(4, 1, 1, 0, 0, 0)
+    # moon_2 = Moon(11, -18, -1, 0, 0, 0)
+    # moon_3 = Moon(-2, -10, -4, 0, 0, 0)
+    # moon_4 = Moon(-7, -2, 14, 0, 0, 0)
 
     return moon_1, moon_2, moon_3, moon_4
 
 
-def adjust_moons(moon_1, moon_2, moon_3, moon_4):
-    should_stop = False
-    i = 0
+def lcm(*numbers):
+    def lcm(a, b):
+        return (a * b) // gcd(a, b)
 
-    dict_of_moon_1_history = {}
-    dict_of_moon_2_history = {}
-    dict_of_moon_3_history = {}
-    dict_of_moon_4_history = {}
+    return reduce(lcm, numbers, 1)
+
+
+def adjust_moons(moon_1, moon_2, moon_3, moon_4):
+
+    should_stop = False
+    i = 1
+
+    last_moon_1_pos_x = -1
+    last_moon_1_pos_y = 0
+    last_moon_1_pos_z = 2
+    last_moon_1_vel_x = 0
+    last_moon_1_vel_y = 0
+    last_moon_1_vel_z = 0
+
+    last_moon_2_pos_x = 2
+    last_moon_2_pos_y = -10
+    last_moon_2_pos_z = -7
+    last_moon_2_vel_x = 0
+    last_moon_2_vel_y = 0
+    last_moon_2_vel_z = 0
+
+    last_moon_3_pos_x = 4
+    last_moon_3_pos_y = -8
+    last_moon_3_pos_z = 8
+    last_moon_3_vel_x = 0
+    last_moon_3_vel_y = 0
+    last_moon_3_vel_z = 0
+
+    last_moon_4_pos_x = 3
+    last_moon_4_pos_y = 5
+    last_moon_4_pos_z = -1
+    last_moon_4_vel_x = 0
+    last_moon_4_vel_y = 0
+    last_moon_4_vel_z = 0
+
+    circle_moon_1_pos_x = circle_moon_1_pos_y = circle_moon_1_pos_z = circle_moon_1_vel_x = circle_moon_1_vel_y = circle_moon_1_vel_z = circle_moon_2_pos_x = circle_moon_2_pos_y = circle_moon_2_pos_z = circle_moon_2_vel_x = circle_moon_2_vel_y = circle_moon_2_vel_z = circle_moon_3_pos_x = circle_moon_3_pos_y = circle_moon_3_pos_z = circle_moon_3_vel_x = circle_moon_3_vel_y = circle_moon_3_vel_z = circle_moon_4_pos_x = circle_moon_4_pos_y = circle_moon_4_pos_z = circle_moon_4_vel_x = circle_moon_4_vel_y = circle_moon_4_vel_z = 0
 
     list_of_moons = [moon_1, moon_2, moon_3, moon_4]
 
@@ -83,29 +121,130 @@ def adjust_moons(moon_1, moon_2, moon_3, moon_4):
         moon_4.pos_y += moon_4.vel_y
         moon_4.pos_z += moon_4.vel_z
 
-        moon_1_list = [moon_1.pos_x, moon_1.pos_y, moon_1.pos_z, moon_1.vel_x, moon_1.vel_y, moon_1.vel_z]
-        moon_2_list = [moon_2.pos_x, moon_2.pos_y, moon_2.pos_z, moon_2.vel_x, moon_2.vel_y, moon_2.vel_z]
-        moon_3_list = [moon_3.pos_x, moon_3.pos_y, moon_3.pos_z, moon_3.vel_x, moon_3.vel_y, moon_3.vel_z]
-        moon_4_list = [moon_4.pos_x, moon_4.pos_y, moon_4.pos_z, moon_4.vel_x, moon_4.vel_y, moon_4.vel_z]
 
-        for key in dict_of_moon_1_history.keys():
-            if dict_of_moon_1_history[key] == moon_1_list \
-                    and dict_of_moon_2_history[key] == moon_2_list \
-                    and dict_of_moon_3_history[key] == moon_3_list \
-                    and dict_of_moon_4_history[key] == moon_4_list:
-                print("i=" + str(i))
-                print("key=" + str(key))
-                should_stop = True
+        if moon_1.pos_x == last_moon_1_pos_x==-1 and not bool(circle_moon_1_pos_x):
+            circle_moon_1_pos_x = i
+            print("circle_moon_1_pos_x")
+        if moon_1.pos_y == last_moon_1_pos_y==0 and not bool(circle_moon_1_pos_y):
+            circle_moon_1_pos_y = i
+            print("circle_moon_1_pos_y")
+        if moon_1.pos_z == last_moon_1_pos_z==2 and not bool(circle_moon_1_pos_z):
+            circle_moon_1_pos_z = i
+            print("circle_moon_1_pos_z")
+        # if moon_1.vel_x == last_moon_1_vel_x==0:
+        #     circle_moon_1_vel_x = i
+        #     print("circle_moon_1_vel_x")
+        # if moon_1.vel_y == last_moon_1_vel_y==0:
+        #     circle_moon_1_vel_y = i
+        #     print("circle_moon_1_vel_y")
+        # if moon_1.vel_z == last_moon_1_vel_z==0:
+        #     circle_moon_1_vel_z = i
+        #     print("circle_moon_1_vel_z")
 
-        dict_of_moon_1_history[i] = moon_1_list
-        dict_of_moon_2_history[i] = moon_2_list
-        dict_of_moon_3_history[i] = moon_3_list
-        dict_of_moon_4_history[i] = moon_4_list
+        if moon_2.pos_x == last_moon_2_pos_x==2 and not bool(circle_moon_2_pos_x):
+            circle_moon_2_pos_x = i
+            print("circle_moon_2_pos_x")
+        if moon_2.pos_y == last_moon_2_pos_y==-10 and not bool(circle_moon_2_pos_y):
+            circle_moon_2_pos_y = i
+            print("circle_moon_2_pos_y")
+        if moon_2.pos_z == last_moon_2_pos_z==-7 and not bool(circle_moon_2_pos_z):
+            circle_moon_2_pos_z = i
+            print("circle_moon_2_pos_y")
+        # if moon_2.vel_x == last_moon_2_vel_x==0:
+        #     circle_moon_2_vel_x = i
+        # if moon_2.vel_y == last_moon_2_vel_y==0:
+        #     circle_moon_2_vel_y = i
+        # if moon_2.vel_z == last_moon_2_vel_z==0:
+        #     circle_moon_2_vel_z = i
 
-        if i % 10000 == 0:
-            print("i=" + str(i))
+        if moon_3.pos_x == last_moon_3_pos_x==4 and not bool(circle_moon_3_pos_x):
+            circle_moon_3_pos_x = i
+        if moon_3.pos_y == last_moon_3_pos_y==-8 and not bool(circle_moon_3_pos_y):
+            circle_moon_3_pos_y = i
+        if moon_3.pos_z == last_moon_3_pos_z==8and not bool(circle_moon_3_pos_z):
+            circle_moon_3_pos_z = i
+        # if moon_3.vel_x == last_moon_3_vel_x==0:
+        #     circle_moon_3_vel_x = i
+        # if moon_3.vel_y == last_moon_3_vel_y==0:
+        #     circle_moon_3_vel_y = i
+        # if moon_3.vel_z == last_moon_3_vel_z==0:
+        #     circle_moon_3_vel_z = i
+
+        if moon_4.pos_x == last_moon_4_pos_x==3 and not bool(circle_moon_4_pos_x):
+            circle_moon_4_pos_x = i
+        if moon_4.pos_y == last_moon_4_pos_y==5 and not bool(circle_moon_4_pos_y):
+            circle_moon_4_pos_y = i
+        if moon_4.pos_z == last_moon_4_pos_z==-1 and not bool(circle_moon_4_pos_z):
+            circle_moon_4_pos_z = i
+        # if moon_4.vel_x == last_moon_4_vel_x==0:
+        #     circle_moon_4_vel_x = i
+        # if moon_4.vel_y == last_moon_4_vel_y==0:
+        #     circle_moon_4_vel_y = i
+        # if moon_4.vel_z == last_moon_4_vel_z==0:
+        #     circle_moon_4_vel_z = i
+
+        if (bool(circle_moon_1_pos_x) and bool(circle_moon_1_pos_y) and bool(circle_moon_1_pos_z)
+                and bool(circle_moon_2_pos_x) and bool(circle_moon_2_pos_y) and bool(circle_moon_2_pos_z)
+                and bool(circle_moon_3_pos_x) and bool(circle_moon_3_pos_y) and bool(circle_moon_3_pos_z)
+                and bool(circle_moon_4_pos_x) and bool(circle_moon_4_pos_y) and bool(circle_moon_4_pos_z)):
+            print(circle_moon_1_pos_x)
+            print(circle_moon_1_pos_y)
+            print(circle_moon_1_pos_z)
+
+            print(circle_moon_2_pos_x)
+            print(circle_moon_2_pos_y)
+            print(circle_moon_2_pos_z)
+
+            print(circle_moon_3_pos_x)
+            print(circle_moon_3_pos_y)
+            print(circle_moon_3_pos_z)
+
+            print(circle_moon_4_pos_x)
+            print(circle_moon_4_pos_y)
+            print(circle_moon_4_pos_z)
+
+            answer = lcm(circle_moon_1_pos_x,circle_moon_1_pos_y,circle_moon_1_pos_z,
+                         circle_moon_2_pos_x,circle_moon_2_pos_y,circle_moon_2_pos_z,
+                         circle_moon_3_pos_x,circle_moon_3_pos_y,circle_moon_3_pos_z,
+                         circle_moon_4_pos_x,circle_moon_4_pos_y,circle_moon_4_pos_z)
+
+            print("answer="+str(answer))
+
+            should_stop = True
+
+
+        last_moon_1_pos_x = moon_1.pos_x
+        last_moon_1_pos_y = moon_1.pos_y
+        last_moon_1_pos_z = moon_1.pos_z
+        last_moon_1_vel_x = moon_1.vel_x
+        last_moon_1_vel_y = moon_1.vel_y
+        last_moon_1_vel_z = moon_1.vel_z
+
+        last_moon_2_pos_x = moon_2.pos_x
+        last_moon_2_pos_y = moon_2.pos_y
+        last_moon_2_pos_z = moon_2.pos_z
+        last_moon_2_vel_x = moon_2.vel_x
+        last_moon_2_vel_y = moon_2.vel_y
+        last_moon_2_vel_z = moon_2.vel_z
+
+        last_moon_3_pos_x = moon_3.pos_x
+        last_moon_3_pos_y = moon_3.pos_y
+        last_moon_3_pos_z = moon_3.pos_z
+        last_moon_3_vel_x = moon_3.vel_x
+        last_moon_3_vel_y = moon_3.vel_y
+        last_moon_3_vel_z = moon_3.vel_z
+
+        last_moon_4_pos_x = moon_4.pos_x
+        last_moon_4_pos_y = moon_4.pos_y
+        last_moon_4_pos_z = moon_4.pos_z
+        last_moon_4_vel_x = moon_4.vel_x
+        last_moon_4_vel_y = moon_4.vel_y
+        last_moon_4_vel_z = moon_4.vel_z
 
         i += 1
+
+
+
 
 
 def get_solution_1():

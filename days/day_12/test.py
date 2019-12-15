@@ -31,3 +31,4 @@ set_1.clear()
 print(set_1)
 
 print(bool(0))
+print((1==1==1))
