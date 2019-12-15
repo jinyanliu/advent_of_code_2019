@@ -10,6 +10,8 @@ Created at 2019-12-14 20:47
 @author: jinyanliu
 """
 
+import datetime
+
 
 class Moon:
     def __init__(self, pos_x, pos_y, pos_z, vel_x, vel_y, vel_z):
@@ -189,4 +191,6 @@ def get_solution_1():
 
 
 if __name__ == "__main__":
+    print(datetime.datetime.now())
     print(get_solution_1())
+    print(datetime.datetime.now())
