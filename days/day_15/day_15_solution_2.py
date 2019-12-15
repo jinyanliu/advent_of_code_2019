@@ -1,5 +1,5 @@
 """
-Created at 2019-12-15 14:44
+Created at 2019-12-15 15:42
 
 @author: jinyanliu
 """
@@ -101,6 +101,7 @@ def plot_message(dict_of_paint_on_location):
     list_of_start = []
     list_of_current = []
     list_of_target = []
+    list_of_oxygen = []
 
     for key, value in dict_of_paint_on_location.items():
         if value == "wall":
@@ -113,6 +114,8 @@ def plot_message(dict_of_paint_on_location):
             list_of_empty.append(key)
         if value == "target":
             list_of_target.append(key)
+        if value == "oxygen":
+            list_of_oxygen.append(key)
 
     if len(list_of_start) > 0:
         a, b = zip(*list_of_start)
@@ -133,6 +136,10 @@ def plot_message(dict_of_paint_on_location):
     if len(list_of_target) > 0:
         e, f = zip(*list_of_target)
         matplotlib.pyplot.scatter(e, f, c='red', marker="_", s=20)
+
+    if len(list_of_oxygen) > 0:
+        k, l = zip(*list_of_oxygen)
+        matplotlib.pyplot.scatter(k, l, c='red', marker="o", s=20)
 
     matplotlib.pyplot.show()
 
@@ -176,7 +183,7 @@ def get_input(current_location, dict_of_paint_on_location):
         return Direction.LEFT.value
 
 
-def get_unique_painted_locations_count(input_dict):
+def get_empty_count(input_dict):
     i = 0
     step = 0
     relative_base = 0
@@ -184,8 +191,8 @@ def get_unique_painted_locations_count(input_dict):
     current_location = (0, 0)
     dict_of_paint_on_location = {}
     dict_of_graph_on_location = {}
-    dict_of_paint_on_location[current_location] = "start"
-    dict_of_graph_on_location[current_location] = "start"
+    #dict_of_paint_on_location[current_location] = "start"
+    #dict_of_graph_on_location[current_location] = "start"
     count_of_input = 0
     while i + 1 < len(input_dict):
         should_increase_i = True
@@ -224,7 +231,7 @@ def get_unique_painted_locations_count(input_dict):
             if output_value == OutputStatus.WALL.value:
                 # current location is not changed
                 current_location = current_location
-                #print("current_position=" + str(current_location))
+                # print("current_position=" + str(current_location))
                 wall_location = get_new_location(current_location, current_direction)
                 dict_of_paint_on_location[wall_location] = "wall"
                 dict_of_graph_on_location[wall_location] = "wall"
@@ -236,23 +243,23 @@ def get_unique_painted_locations_count(input_dict):
                         dict_of_paint_on_location[new_location] == "wall"):
                     # current location is not changed
                     current_location = current_location
-                    #print("current_position=" + str(current_location))
+                    # print("current_position=" + str(current_location))
                     wall_location = get_new_location(current_location, current_direction)
                     dict_of_paint_on_location[wall_location] = "wall"
                     # plot_message(dict_of_paint_on_location)
                 else:
                     current_location = get_new_location(current_location, current_direction)
-                    #print("current_position=" + str(current_location))
+                    # print("current_position=" + str(current_location))
                     dict_of_paint_on_location[current_location] = "empty"
                     dict_of_graph_on_location[current_location] = "empty"
                     # plot_message(dict_of_paint_on_location)
             elif output_value == OutputStatus.FOUND.value:
-                #print("current_position=" + str(current_location))
+                # print("current_position=" + str(current_location))
                 current_location = target_location = get_new_location(current_location, current_direction)
                 dict_of_paint_on_location[current_location] = "target"
                 dict_of_graph_on_location[current_location] = "target"
                 # plot_message(dict_of_paint_on_location)
-                break
+                # break
 
             currentx, currenty = current_location
             if ((currentx, currenty + 1) in dict_of_paint_on_location.keys() and dict_of_paint_on_location[
@@ -333,6 +340,11 @@ def get_unique_painted_locations_count(input_dict):
             step = 1
 
         elif opcode == Opcode.HALT.value:
+            print("halt")
+            break
+
+        if (count_of_input == 3000):
+            print("input3000")
             break
 
         if should_increase_i:
@@ -346,24 +358,76 @@ def get_unique_painted_locations_count(input_dict):
     print(dict_of_paint_on_location)
     print("count of input= " + str(count_of_input))
 
-    dict_of_paint_on_location[(0, 0)] = "start"
-    dict_of_graph_on_location[(0, 0)] = "start"
+    # this is my graph, has customized block
+    #dict_of_paint_on_location[(0, 0)] = "start"
+    # this is puzzle graph, doesn't have customized block
+    #dict_of_graph_on_location[(0, 0)] = "start"
 
-    # puzzle graph without customized wall
     plot_message(dict_of_graph_on_location)
-    # mine graph with customized wall
-    plot_message(dict_of_paint_on_location)
 
     empty_count = 0
     for key, value in dict_of_paint_on_location.items():
         if value == "empty":
             empty_count += 1
 
+    dict_of_graph_on_location[(0, 0)] = "oxygen"
+    #plot_message(dict_of_graph_on_location)
+
+    oxygen_step = 0
+    list_of_oxygen_tuple = [(, 0)]
+    new_list = list_of_oxygen_tuple[:]
+    should_run = True
+
+    while should_run:
+        has_changed = False
+
+        for item in new_list:
+            new_list = new_list[:]
+
+            itemx, itemy = item
+
+            if dict_of_graph_on_location[(itemx, itemy + 1)] == "empty":
+                dict_of_graph_on_location[(itemx, itemy + 1)] = "oxygen"
+                new_list.append((itemx, itemy + 1))
+                has_changed = True
+            if dict_of_graph_on_location[(itemx+1, itemy)] == "empty":
+                dict_of_graph_on_location[(itemx+1, itemy)] = "oxygen"
+                new_list.append((itemx+1, itemy))
+                has_changed = True
+            if dict_of_graph_on_location[(itemx, itemy-1)] == "empty":
+                dict_of_graph_on_location[(itemx, itemy-1)] = "oxygen"
+                new_list.append((itemx, itemy-1))
+                has_changed = True
+            if dict_of_graph_on_location[(itemx-1, itemy)] == "empty":
+                dict_of_graph_on_location[(itemx-1, itemy)] = "oxygen"
+                new_list.append((itemx-1, itemy))
+                has_changed = True
+
+        if has_changed:
+            oxygen_step+=1
+
+        print("oxygen_step=" + str(oxygen_step))
+        #plot_message(dict_of_graph_on_location)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return empty_count + 2
 
 
 def get_solution_1():
-    return get_unique_painted_locations_count(get_dict_of_int_input())
+    return get_empty_count(get_dict_of_int_input())
 
 
 if __name__ == "__main__":

@@ -208,7 +208,7 @@ def get_score(input_dict):
         if should_increase_i:
             i += step + 1
 
-    #plot_message(dict_of_paint_on_location)
+    plot_message(dict_of_paint_on_location)
 
     print(dict_of_paint_on_location)
 

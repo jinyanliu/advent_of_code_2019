@@ -192,7 +192,7 @@ def get_block_count(input_dict):
             i += step + 1
 
     print(dict_of_paint_on_location)
-    #plot_message(dict_of_paint_on_location)
+    plot_message(dict_of_paint_on_location)
 
     count_block = 0
     for value in dict_of_paint_on_location.values():
