@@ -8,6 +8,7 @@ from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
 import random
 
+from numpy.core._multiarray_umath import lcm
 
 fig = pyplot.figure()
 ax = Axes3D(fig)
@@ -32,3 +33,6 @@ print(set_1)
 
 print(bool(0))
 print((1==1==1))
+
+
+print(lcm(40,160))
