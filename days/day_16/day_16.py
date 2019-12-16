@@ -30,22 +30,46 @@ def get_multiply_int_list(row, target_len):
     return new_list[1:target_len + 1]
 
 
-def get_solution_1(target_string):
+def get_one_phase(target_string):
     len_of_string = len(target_string)
+    print(target_string)
     one_phase_result = ""
     for i in range(0, len_of_string):
         multiple_int_list = get_multiply_int_list(i + 1, len_of_string)
         one_line_result = 0
+        string_to_print = ""
         for i in range(0, len_of_string):
             a = int(target_string[i])
             b = multiple_int_list[i]
             one_line_result += a * b
+            string_to_print += str(a) + ' * '+ str(b) + ' + '
         one_line_result_str = str(one_line_result)[-1]
+        string_to_print = string_to_print[:-3]  + ' = '+ str(one_line_result)[-1]
+        print(string_to_print)
         one_phase_result += one_line_result_str
+
     return one_phase_result
 
 
-if __name__ == "__main__":
-    print(get_multiply_int_list(4, 8))
+def get_solution_one(initial_string, phase_number):
+    target_string = initial_string
+    for p in range(0,phase_number):
+        print(p)
+        target_string = get_one_phase(target_string)
+        print('\n')
+    return target_string
 
-    print(get_solution_1(get_original_string()))
+
+def get_solution_two(initial_string, phase_number):
+    target_string = initial_string
+    for p in range(0, phase_number):
+        print(p)
+        target_string = get_one_phase(target_string)
+    position = target_string[:7]
+    return target_string[int(position):]
+
+
+if __name__ == "__main__":
+    print(get_solution_one(get_original_string(), 100))
+    #print(get_solution_two(get_original_string()*10000, 100))
+
