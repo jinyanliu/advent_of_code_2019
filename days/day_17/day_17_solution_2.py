@@ -1,12 +1,9 @@
 """
-Created at 2019-12-18 19:41
+Created at 2019-12-18 20:50
 
 @author: jinyanliu
 """
 from enum import Enum
-
-import matplotlib
-import matplotlib.pyplot as plt
 
 
 class Opcode(Enum):
@@ -72,7 +69,7 @@ def get_value(mode, input_dict, i, relative_base, number):
         return input_dict[i + number]
     elif mode == ParametersMode.RELATIVE.value:
         relative_position = relative_base + input_dict[i + number]
-        return input_dict[relative_position] if input_dict[relative_position] in input_dict.keys() else 0
+        return input_dict[relative_position]
 
 
 def get_replace_position(mode, input_dict, i, relative_base, number):
@@ -82,11 +79,11 @@ def get_replace_position(mode, input_dict, i, relative_base, number):
         return relative_base + input_dict[i + number]
 
 
-def run_int_computer(input_list, input_dict):
+def get_final_output(input_list, input_dict):
     i = 0
     step = 0
     relative_base = 0
-
+    output_value = 0
     while i + 1 < len(input_dict):
         should_increase_i = True
 
@@ -111,11 +108,12 @@ def run_int_computer(input_list, input_dict):
             input_list.pop(0)
             replace_position = get_replace_position(first_mode, input_dict, i, relative_base, 1)
             input_dict[replace_position] = input_value
+            # print("input_value = " + str(input_value))
             step = 1
 
         elif opcode == Opcode.OUTPUT.value:
             output_value = get_value(first_mode, input_dict, i, relative_base, 1)
-            # print("output_value = " + str(output_value))
+            #print("output_value = " + str(output_value))
             print(chr(output_value), end='')
             step = 1
 
@@ -166,52 +164,14 @@ def run_int_computer(input_list, input_dict):
         if should_increase_i:
             i += step + 1
 
-
-def convert_main_routine():
-    target_string = "A,B,A,B,A,C,B,C,A,C"
-    new_list = []
-    for s in target_string:
-        new_list.append(ord(s))
-    new_list.append(ord("\n"))
-    print(new_list)
-    return new_list
-
-
-def convert_a():
-    target_string = "L,6,R,12,L,6"
-    new_list = []
-    for s in target_string:
-        new_list.append(ord(s))
-    new_list.append(ord("\n"))
-    print(new_list)
-    return new_list
-
-
-def convert_b():
-    target_string = "R,12,L,10,L,4,L,6"
-    new_list = []
-    for s in target_string:
-        new_list.append(ord(s))
-    new_list.append(ord("\n"))
-    print(new_list)
-    return new_list
-
-
-def convert_c():
-    target_string = "L,10,L,10,L,4,L,6"
-    new_list = []
-    for s in target_string:
-        new_list.append(ord(s))
-    new_list.append(ord("\n"))
-    print(new_list)
-    return new_list
+    return output_value
 
 
 def get_solution_2():
-    input_list = convert_main_routine() + convert_a() + convert_b() + convert_c() + [ord("y"), ord("\n")]
-    print(input_list)
-    return run_int_computer(input_list, get_dict_of_int_input())
+    # My code only works for 121,10; does not work for 110,10
+    input_list = [65, 44, 66, 44, 65, 44, 66, 44, 65, 44, 67, 44, 66, 44, 67, 44, 65, 44, 67, 10, 76, 44, 54, 44, 82, 44, 49, 50, 44, 76, 44, 54, 10, 82, 44, 49, 50, 44, 76, 44, 49, 48, 44, 76, 44, 52, 44, 76, 44, 54, 10, 76, 44, 49, 48, 44, 76, 44, 49, 48, 44, 76, 44, 52, 44, 76, 44, 54, 10, 121, 10]
+    return get_final_output(input_list, get_dict_of_int_input())
 
 
 if __name__ == "__main__":
-    get_solution_2()
+    print(get_solution_2())
