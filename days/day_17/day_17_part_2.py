@@ -725,7 +725,7 @@ def get_alignment_parameters_sum(input_list, input_dict):
             else:
                 break
 
-        plot_message(dict_of_paint_on_location)
+        #plot_message(dict_of_paint_on_location)
     print(final_string)
 
     return result
