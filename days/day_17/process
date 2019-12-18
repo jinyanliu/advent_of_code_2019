@@ -1,0 +1,35 @@
+
+L6, R12, L6, R12, L10, L4, L6, L6, R12, L6, R12, L10, L4, L6, L6, R12, L6, L10, L10, L4, L6, R12, L10, L4, L6, L10, L10, L4, L6, L6, R12, L6, L10, L10, L4, L6,
+
+L6, R12, L6, R12, L10, L4, L6, L6, R12, L6, R12, L10, L4, L6, L6, R12, L6, L10, L10, L4, L6, R12, L10, L4, L6, L10, L10, L4, L6, L6, R12, L6, L10, L10, L4, L6,
+
+L6, R12, L6, R12, L10, L4, L6, L6, R12, L6, R12, L10, L4, L6, L6, R12, L6, L10, L10, L4, L6, R12, L10, L4, L6, L10, L10, L4, L6, L6, R12, L6, L10, L10, L4, L6,
+
+A: L,6,R,12,L,6
+
+B: R,12,L,10,L,4,L,6
+
+A: L,6,R,12,L,6
+
+B: R,12,L,10,L,4,L,6
+
+A: L,6,R,12,L,6
+
+C: L,10,L,10,L,4,L,6
+
+B: R,12,L,10,L,4,L,6
+
+C: L,10,L,10,L,4,L,6
+
+A: L,6,R,12,L,6
+
+C: L,10,L,10,L,4,L,6
+
+
+Main routine: A,B,A,B,A,C,B,C,A,C
+
+Function A: L,6,R,12,L,6
+
+Function B: R,12,L,10,L,4,L,6
+
+Function C: L,10,L,10,L,4,L,6

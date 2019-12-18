@@ -1,5 +1,5 @@
 """
-Created at 2019-12-17 19:30
+Created at 2019-12-17 20:07
 
 @author: jinyanliu
 """
@@ -51,7 +51,7 @@ class OutputStatus(Enum):
 def get_dict_of_int_input():
     dict_of_int_input = {}
     i = 0
-    with open("day_17_input") as lines:
+    with open("day_17_input_part_1") as lines:
         list_of_string = lines.readline().split(',')
         for s in list_of_string:
             dict_of_int_input[i] = int(s)
@@ -197,6 +197,8 @@ def get_alignment_parameters_sum(input_dict):
             output_value = get_value(first_mode, input_dict, i, relative_base, 1)
             # print("output_value = " + str(output_value))
 
+            print(chr(output_value), end='')
+
             if output_value == OutputStatus.SCAFFOLD.value:
                 current_x, current_y = current_location
                 current_location = (current_x + 1, current_y)
@@ -269,7 +271,7 @@ def get_alignment_parameters_sum(input_dict):
             i += step + 1
 
     print(dict_of_paint_on_location)
-    #plot_message(dict_of_paint_on_location)
+    plot_message(dict_of_paint_on_location)
 
     list_of_intersection= []
 
