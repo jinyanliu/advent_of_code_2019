@@ -184,12 +184,61 @@ def get_coordinates_list():
 def get_solution_1():
     coordinates_list = get_coordinates_list()
     count_of_state_pulled = 0
+    list_of_tuple = []
     for co in coordinates_list:
         x, y = co
         if get_drone_state([x, y], get_dict_of_int_input()) == DroneState.PULLED.value:
             count_of_state_pulled += 1
+            list_of_tuple.append((x, y))
+    # print(sorted(list_of_tuple, key=lambda x: x[1]))
     return count_of_state_pulled
+
+
+def get_right_corner_coordinates():
+    x = 1
+    y = 1
+    list_of_right_corner = [(0, 0), (1, 1)]
+
+    for y in range(2, 20):
+        if (len(list_of_right_corner) - 4) % 7 == 0 or (len(list_of_right_corner)) % 7 == 0:
+            x = x + 1
+        else:
+            x = x + 2
+        list_of_right_corner.append((x, y))
+    print(list_of_right_corner)
+
+
+def get_solution_2():
+    list_of_tuple = []
+    y = 4
+    start_x = 3
+    should_stopy = False
+    while not should_stopy:
+        x = start_x
+        should_stopx = False
+        while not should_stopx:
+
+            if get_drone_state([x, y], get_dict_of_int_input()) == DroneState.STATIONARY.value:
+                last_pulled_inline = (x - 1, y)
+                list_of_tuple.append(last_pulled_inline)
+
+                start_x = x
+
+                if (x - 1 - 99 > 0
+                        and get_drone_state([x - 1 - 99, y], get_dict_of_int_input()) == DroneState.PULLED.value
+                        and get_drone_state([x - 1 - 99, y + 99], get_dict_of_int_input()) == DroneState.PULLED.value
+                        and get_drone_state([x - 1, y + 99], get_dict_of_int_input()) == DroneState.PULLED.value):
+                    print("found!!!!!" + str(x - 1-99) + "," + str(y))
+                    should_stopy = True
+                    break
+                should_stopx = True
+            x += 1
+        y += 1
+        # print(list_of_tuple)
+        print(y)
+    return (x-1-99)*10000+(y-1)
 
 
 if __name__ == "__main__":
     print(get_solution_1())
+    print(get_solution_2())
