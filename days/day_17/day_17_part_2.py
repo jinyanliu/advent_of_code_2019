@@ -87,7 +87,7 @@ def get_value(mode, input_dict, i, relative_base, number):
         return input_dict[i + number]
     elif mode == ParametersMode.RELATIVE.value:
         relative_position = relative_base + input_dict[i + number]
-        return input_dict[relative_position] if input_dict[relative_position] in input_dict.keys() else 0
+        return input_dict[relative_position] if relative_position in input_dict.keys() else 0
 
 
 def get_replace_position(mode, input_dict, i, relative_base, number):
@@ -220,7 +220,6 @@ def get_alignment_parameters_sum(input_list, input_dict):
 
         elif opcode == Opcode.OUTPUT.value:
             output_value = get_value(first_mode, input_dict, i, relative_base, 1)
-            #print("output_value = " + str(output_value))
 
             print(chr(output_value), end='')
 
@@ -728,7 +727,7 @@ def get_alignment_parameters_sum(input_list, input_dict):
         #plot_message(dict_of_paint_on_location)
     print(final_string)
 
-    return result
+    return output_value
 
 
 def convert_main_routine():
@@ -786,4 +785,4 @@ if __name__ == "__main__":
     input_list = convert_main_routine() + convert_a() + convert_b() + convert_c() + last_line
     print("input_list=" + str(input_list))
 
-    get_alignment_parameters_sum(input_list, get_dict_of_int_input())
+    print(get_alignment_parameters_sum(input_list, get_dict_of_int_input()))
