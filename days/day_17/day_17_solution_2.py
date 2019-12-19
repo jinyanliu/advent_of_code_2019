@@ -69,7 +69,7 @@ def get_value(mode, input_dict, i, relative_base, number):
         return input_dict[i + number]
     elif mode == ParametersMode.RELATIVE.value:
         relative_position = relative_base + input_dict[i + number]
-        return input_dict[relative_position]
+        return input_dict[relative_position] if relative_position in input_dict.keys() else 0
 
 
 def get_replace_position(mode, input_dict, i, relative_base, number):
@@ -168,8 +168,7 @@ def get_final_output(input_list, input_dict):
 
 
 def get_solution_2():
-    # My code only works for 121,10; does not work for 110,10
-    input_list = [65, 44, 66, 44, 65, 44, 66, 44, 65, 44, 67, 44, 66, 44, 67, 44, 65, 44, 67, 10, 76, 44, 54, 44, 82, 44, 49, 50, 44, 76, 44, 54, 10, 82, 44, 49, 50, 44, 76, 44, 49, 48, 44, 76, 44, 52, 44, 76, 44, 54, 10, 76, 44, 49, 48, 44, 76, 44, 49, 48, 44, 76, 44, 52, 44, 76, 44, 54, 10, 121, 10]
+    input_list = [65, 44, 66, 44, 65, 44, 66, 44, 65, 44, 67, 44, 66, 44, 67, 44, 65, 44, 67, 10, 76, 44, 54, 44, 82, 44, 49, 50, 44, 76, 44, 54, 10, 82, 44, 49, 50, 44, 76, 44, 49, 48, 44, 76, 44, 52, 44, 76, 44, 54, 10, 76, 44, 49, 48, 44, 76, 44, 49, 48, 44, 76, 44, 52, 44, 76, 44, 54, 10, 110, 10]
     return get_final_output(input_list, get_dict_of_int_input())
 
 
