@@ -194,30 +194,17 @@ def get_solution_1():
     return count_of_state_pulled
 
 
-def get_right_corner_coordinates():
-    x = 1
-    y = 1
-    list_of_right_corner = [(0, 0), (1, 1)]
-
-    for y in range(2, 20):
-        if (len(list_of_right_corner) - 4) % 7 == 0 or (len(list_of_right_corner)) % 7 == 0:
-            x = x + 1
-        else:
-            x = x + 2
-        list_of_right_corner.append((x, y))
-    print(list_of_right_corner)
-
-
 def get_solution_2():
     list_of_tuple = []
     y = 4
     start_x = 3
     should_stopy = False
+
     while not should_stopy:
         x = start_x
         should_stopx = False
-        while not should_stopx:
 
+        while not should_stopx:
             if get_drone_state([x, y], get_dict_of_int_input()) == DroneState.STATIONARY.value:
                 last_pulled_inline = (x - 1, y)
                 list_of_tuple.append(last_pulled_inline)
@@ -228,7 +215,7 @@ def get_solution_2():
                         and get_drone_state([x - 1 - 99, y], get_dict_of_int_input()) == DroneState.PULLED.value
                         and get_drone_state([x - 1 - 99, y + 99], get_dict_of_int_input()) == DroneState.PULLED.value
                         and get_drone_state([x - 1, y + 99], get_dict_of_int_input()) == DroneState.PULLED.value):
-                    print("found!!!!!" + str(x - 1-99) + "," + str(y))
+                    print("found!!!!!" + str(x - 1 - 99) + "," + str(y))
                     should_stopy = True
                     break
                 should_stopx = True
@@ -236,9 +223,14 @@ def get_solution_2():
         y += 1
         # print(list_of_tuple)
         print(y)
-    return (x-1-99)*10000+(y-1)
+    return (x - 1 - 99) * 10000 + (y - 1)
 
 
 if __name__ == "__main__":
     print(get_solution_1())
+    # The trick point is you cannot investigate it using the example in task explanation.
+    # You have to print out your tuple list from solution 1, to see the pattern of your list.
+    # The pattern of the example and your list aren't the same !!!!
+    # That's my list: [(0, 0), (3, 4), (4, 5), (5, 6), (5, 7), (6, 7), (6, 8), (7, 9), (8, 10), (8, 11), (9, 11), (9, 12), (10, 12), (10, 13), (11, 13), (10, 14), (11, 14), (12, 14), (11, 15), (12, 15), (12, 16), (13, 16), (13, 17), (14, 17), (13, 18), (14, 18), (15, 18), (14, 19), (15, 19), (16, 19), (15, 20), (16, 20), (17, 20), (15, 21), (16, 21), (17, 21), (18, 21), (16, 22), (17, 22), (18, 22), (19, 22), (17, 23), (18, 23), (19, 23), (18, 24), (19, 24), (20, 24), (18, 25), (19, 25), (20, 25), (21, 25), (19, 26), (20, 26), (21, 26), (22, 26), (20, 27), (21, 27), (22, 27), (23, 27), (20, 28), (21, 28), (22, 28), (23, 28), (24, 28), (21, 29), (22, 29), (23, 29), (24, 29), (25, 29), (22, 30), (23, 30), (24, 30), (25, 30), (22, 31), (23, 31), (24, 31), (25, 31), (26, 31), (23, 32), (24, 32), (25, 32), (26, 32), (27, 32), (24, 33), (25, 33), (26, 33), (27, 33), (28, 33), (25, 34), (26, 34), (27, 34), (28, 34), (29, 34), (25, 35), (26, 35), (27, 35), (28, 35), (29, 35), (30, 35), (26, 36), (27, 36), (28, 36), (29, 36), (30, 36), (31, 36), (27, 37), (28, 37), (29, 37), (30, 37), (31, 37), (32, 37), (27, 38), (28, 38), (29, 38), (30, 38), (31, 38), (32, 38), (28, 39), (29, 39), (30, 39), (31, 39), (32, 39), (33, 39), (29, 40), (30, 40), (31, 40), (32, 40), (33, 40), (34, 40), (30, 41), (31, 41), (32, 41), (33, 41), (34, 41), (35, 41), (30, 42), (31, 42), (32, 42), (33, 42), (34, 42), (35, 42), (36, 42), (31, 43), (32, 43), (33, 43), (34, 43), (35, 43), (36, 43), (37, 43), (32, 44), (33, 44), (34, 44), (35, 44), (36, 44), (37, 44), (38, 44), (32, 45), (33, 45), (34, 45), (35, 45), (36, 45), (37, 45), (38, 45), (33, 46), (34, 46), (35, 46), (36, 46), (37, 46), (38, 46), (39, 46), (34, 47), (35, 47), (36, 47), (37, 47), (38, 47), (39, 47), (40, 47), (35, 48), (36, 48), (37, 48), (38, 48), (39, 48), (40, 48), (41, 48), (35, 49), (36, 49), (37, 49), (38, 49), (39, 49), (40, 49), (41, 49), (42, 49)]
+    # The trick point is: Not every row has #!!!!! So I have to start from (3,4)
     print(get_solution_2())
