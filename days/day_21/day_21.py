@@ -231,6 +231,7 @@ def encode_to_ascii(target_string):
 
 def get_solution_1():
     input_list = []
+    # (!A or !B or !C) and D
     list_of_instruction = ["NOT A J",
                            "NOT B T",
                            "OR T J",
