@@ -130,8 +130,8 @@ def get_output_value(input_list, input_dict):
 
         elif opcode == Opcode.OUTPUT.value:
             output_value = get_value(first_mode, input_dict, i, relative_base, 1)
-            print("output_value = " + str(output_value))
-            print(chr(output_value), end='')
+            # print("output_value = " + str(output_value))
+            # print(chr(output_value), end='')
             step = 1
 
         elif opcode == Opcode.JUMP_IF_TRUE.value:
@@ -243,5 +243,27 @@ def get_solution_1():
     return get_output_value(input_list, get_dict_of_int_input())
 
 
+def get_solution_2():
+    input_list = []
+    # (!A or !B or !C) and D and (E or H)
+    # !(!E and !H) and D and !(A and B and C)
+    list_of_instruction = ["NOT E T",
+                           "NOT H J",
+                           "AND T J",
+                           "NOT J J",
+                           "AND D J",
+                           "NOT A T",
+                           "NOT T T",
+                           "AND B T",
+                           "AND C T",
+                           "NOT T T",
+                           "AND T J",
+                           "RUN"]
+    for item in list_of_instruction:
+        input_list += encode_to_ascii(item)
+    return get_output_value(input_list, get_dict_of_int_input())
+
+
 if __name__ == "__main__":
     print(get_solution_1())
+    print(get_solution_2())
