@@ -1,5 +1,5 @@
 """
-Created at 2019-12-20 19:43
+Created at 2019-12-22 18:30
 
 @author: jinyanliu
 """
@@ -141,8 +141,6 @@ def move_left(current_location, map, list_of_visited):
     elif right_location in map.keys() and map[right_location] == ".":
         current_location = right_location
 
-
-
     if should_mark_as_wall(current_location, map):
         map[current_location] = "#"
     print(current_location)
@@ -152,17 +150,14 @@ def move_left(current_location, map, list_of_visited):
 
 def reach_character(current_location, map):
     character = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    current_x, current_y = current_location
-    up_location = (current_x, current_y + 1)
-    down_location = (current_x, current_y - 1)
-    left_location = (current_x - 1, current_y)
-    right_location = (current_x + 1, current_y)
+    up, down, left, right = get_4_locations(current_location)
 
-    if map[current_location] == "." and ((up_location in map.keys() and map[up_location] in character)
-                                         or (right_location in map.keys() and map[right_location] in character)
-                                         or (down_location in map.keys() and map[down_location] in character)
-                                         or (left_location in map.keys() and map[left_location] in character)):
-        print("Found character!" + str(current_x) + "," + str(current_y))
+    if map[current_location] == "." \
+            and ((map.get(up, "0") in character)
+                 or (map.get(right, "0") in character)
+                 or (map.get(down, "0") in character)
+                 or (map.get(left, "0") in character)):
+        print("Found character!" + str(current_location))
         return True
     return False
 
@@ -227,51 +222,65 @@ def get_left_destination_and_steps(start_location):
     return count_of_steps
 
 
-if __name__ == "__main__":
-    # zz = (2, -17)
-    # steps1 = get_destination_and_steps(zz)
-    # di = (2, -15)
-    # di = (8, -21)
-    # steps2 = get_destination_and_steps(di)
-    # yn = (2, -23)
-    # yn = (26, -13)
-    # steps3 = get_destination_and_steps(yn)
-    # vt = (32, -11)
-    # vt = (26, -23)
-    # steps4 = get_destination_and_steps(vt)
-    # lf = (32, -21)
-    # lf = (15, -28)
-    # steps5 = get_destination_and_steps(lf)
-    # jp = (15, -34)
-    # jp = (21, -28)
-    # steps6 = get_destination_and_steps(jp)
-    # cp = (19, -34)
-    # cp = (21, -8)
-    # steps7 = get_destination_and_steps(cp)
-    # aa = (19, -2)
-    #
-    # steps = steps1+steps2+steps3+steps4+steps5+steps6+steps7
-    # print(steps)
+def get_4_locations(center):
+    x, y = center
+    up = (x, y + 1)
+    down = (x, y - 1)
+    left = (x - 1, y)
+    right = (x + 1, y)
+    return up, down, left, right
 
-    # aa = (19, -2)
-    # step1 = get_destination_and_steps(aa)
-    # cp = (21, -8)
-    # cp = (19, -34)
-    # step2 = get_destination_and_steps(cp)
-    # jp = (21, -28)
-    # jp = (15, -34)
-    # step3 = get_destination_and_steps(jp)
-    # lf = (15, -28)
-    # lf = (32, -21)
-    # step4 = get_destination_and_steps(lf)
-    # qg = (32, -23)
-    # qg = (26,-17)
-    # step5 = get_destination_and_steps(qg)
-    # asas = (32, -17)
-    # asas = (17, -8)
-    # step6 = get_destination_and_steps(asas)
-    # aa = (19,-2)
+
+def move(map, current_pathes):
+    pathes = []
+    for path in current_pathes:
+        location = path[-1]
+        up, down, left, right = get_4_locations(location)
+        possible_location_list = []
+        if map.get(up, "0") == ".":
+            possible_location_list.append(up)
+        if map.get(down, "0") == ".":
+            possible_location_list.append(down)
+        if map.get(left, "0") == ".":
+            possible_location_list.append(left)
+        if map.get(right, "0") == ".":
+            possible_location_list.append(right)
+        for possible_location in possible_location_list:
+            if possible_location not in path:
+                new_path = path + [possible_location]
+                if reach_character(possible_location, map):
+                    print(len(new_path) - 1)
+                pathes.append(new_path)
+                print(new_path)
+    return pathes
+
+
+def process(map, location):
+    initial_pathes = [[location]]
+    current_pathes = initial_pathes
+    last_pathes = []
+    while current_pathes != last_pathes:
+        last_pathes = current_pathes
+        current_pathes = move(map, last_pathes)
+
+
+if __name__ == "__main__":
+    map = get_input()
 
     aa = (19, -2)
-    steps1 = get_left_destination_and_steps(aa)
+    process(map, aa)
+    ###############################
+    # Found: AS(17,-8), CP(21,-8) #
+    ###############################
 
+    asas = (32, -17)
+    process(map, asas)
+    #####################
+    # Found: QG(26,-17) #
+    #####################
+
+    cp = (19, -34)
+    process(map, cp)
+    #####################
+    # Found: JP(21,-28) #
+    #####################
