@@ -1,5 +1,5 @@
 """
-Created at 2019-12-22 18:30
+Created at 2019-12-22 20:17
 
 @author: jinyanliu
 """
@@ -18,7 +18,7 @@ def get_dict_of_portals():
                        "QG": [(32, -23), (26, -17)],
                        "AS": [(32, -17), (17, -8)],
                        "BU": [(26, -21), (11, -34)],
-                       "JO": [(13, -28), (2, -19)]}
+                       "JO": [(13, -28), (2, -17)]}
     return dict_of_portals
 
 
@@ -241,24 +241,9 @@ def get_4_locations(center):
     return up, down, left, right
 
 
-def process(map, location):
-    current_pathes = [[location]]
-    current_steps = [[0]]
-    last_pathes = []
-    last_steps = []
-    while current_pathes != last_pathes:
-        last_pathes = current_pathes
-        last_steps = current_steps
-        current_pathes, current_steps = move(map, last_pathes, last_steps)
-    return current_pathes, current_steps
-
-
-def move(map, current_pathes, current_steps):
+def move(map, current_pathes):
     pathes = []
-    steps = []
-    i = 0
     for path in current_pathes:
-        has_possible_locations = False
         location = path[-1]
         up, down, left, right = get_4_locations(location)
         possible_location_list = []
@@ -272,120 +257,50 @@ def move(map, current_pathes, current_steps):
             possible_location_list.append(right)
         for possible_location in possible_location_list:
             if possible_location not in path:
-                has_possible_locations = True
                 new_path = path + [possible_location]
-                new_step = current_steps[i] + [(len(new_path) - 1)]
                 if reach_character(possible_location, map):
                     print(len(new_path) - 1)
                 pathes.append(new_path)
-                steps.append(new_step)
-                # print(new_path)
-        if not has_possible_locations:
-            pathes.append(path)
-            steps.append(current_steps[i])
-        i += 1
-    return pathes, steps
+                print(new_path)
+    return pathes
 
 
-def continue_find_next_portal(map, portals_dict, current_location_pathes, current_name_pathes, current_step_pathes):
-    location_pathes = []
-    name_pathes = []
-    steps_pathes = []
-    i = 0
-    for path in current_location_pathes:
-        has_new_portal = False
-        portal_location = path[-1]
-        target_location = portal_location
-        portal = ""
-        for key, value in portals_dict.items():
-            if portal_location in value:
-                portal = key
-        if len(portals_dict[portal]) == 1:
-            target_location = portals_dict[portal][0]
-        else:
-            for location in portals_dict[portal]:
-                if not location == portal_location:
-                    target_location = location
-        processed_pathes, processed_steps = process(map, target_location)
-
-        for key, value in portals_dict.items():
-            for location in value:
-                j = 0
-                for processed_path in processed_pathes:
-                    if processed_path[-1] == location and location not in path and key not in current_name_pathes[i]:
-                        has_new_portal = True
-                        new_location_path = path + [location]
-                        new_name_path = current_name_pathes[i] + [key]
-                        result_steps = processed_steps[j]
-                        new_step_path = current_step_pathes[i] + [result_steps]
-                        print(new_location_path)
-                        print(new_name_path)
-                        print(new_step_path)
-                        location_pathes.append(new_location_path)
-                        name_pathes.append(new_name_path)
-                        steps_pathes.append(new_step_path)
-                    j += 1
-
-        if not has_new_portal:
-            location_pathes.append(path)
-            name_pathes.append(current_name_pathes[i])
-            steps_pathes.append(current_step_pathes[i])
-        i += 1
-    return location_pathes, name_pathes, steps_pathes
+def process(map, location):
+    initial_pathes = [[location]]
+    current_pathes = initial_pathes
+    last_pathes = []
+    while current_pathes != last_pathes:
+        last_pathes = current_pathes
+        current_pathes = move(map, last_pathes)
+    return current_pathes
 
 
 if __name__ == "__main__":
     map = get_input()
-    portals_dict = get_dict_of_portals()
 
-    current_location_pathes = [[(19, -2)]]
-    current_name_pathes = [["AA"]]
-    current_steps_pathes = [[0]]
-    last_location_pathes = []
-    last_name_pathes = []
-    last_step_pathes = []
-    while current_location_pathes != last_location_pathes:
-        last_location_pathes = current_location_pathes
-        last_name_pathes = current_name_pathes
-        last_step_pathes = current_steps_pathes
-        current_location_pathes, current_name_pathes, current_steps_pathes = continue_find_next_portal(map,
-                                                                                                       portals_dict,
-                                                                                                       last_location_pathes,
-                                                                                                       last_name_pathes,
-                                                                                                       last_step_pathes)
+    #aa = (19, -2)
+    #result_pathes = process(map, aa)
+    ###############################
+    # Found: AS(17,-8), CP(21,-8) #
+    ###############################
 
-    result_pathes = []
-    result_steps = []
-    i = 0
-    for current_name_path in current_name_pathes:
-        if "ZZ" in current_name_path:
-            result_pathes.append(current_name_path)
-            print(current_name_path)
-            result_steps.append(current_steps_pathes[i])
-            print(current_steps_pathes[i])
-        i += 1
+    asas = (32, -17)
+    process(map, asas)
+    #####################
+    # Found: QG(26,-17) #
+    #####################
 
-    k = 0
-    while k < len(result_pathes):
-        current_path = result_pathes[k]
-        current_step_path = result_steps[k]
-        print(current_step_path)
+    #cp = (19, -34)
+    #process(map, cp)
+    #####################
+    # Found: JP(21,-28) #
+    #####################
 
-        l = 0
-        step = 0
-        should_stop = False
-        while l < len(current_path) and not should_stop:
-            current_portal = current_path[l]
-            current_step = current_step_path[l]
+    #qg = (32, -23)
+    #process(map, qg)
+    #####################
+    # Found: LF(32,-21) #
+    #####################
 
-            if (l == 0):
-                step += 0
-            else:
-                step += current_step[-1]
-            l += 1
-
-            if (current_portal == "ZZ"):
-                should_stop = True
-        print("step:" + str(step + l - 2))
-
-        k += 1
+    #jo = (2,-19)
+    #process(map, jo)
