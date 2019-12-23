@@ -3,7 +3,6 @@ Created at 2019-12-23 19:14
 
 @author: jinyanliu
 """
-import matplotlib.pyplot
 
 
 def get_dict_of_portals():
@@ -36,7 +35,6 @@ def get_dict_of_portals():
                        "QK": [(110, -59), (69, -28)],
                        "ND": [(110, -69), (28, -65)],
                        "XX": [(110, -73), (84, -69)]}
-
     return dict_of_portals
 
 
@@ -54,128 +52,6 @@ def get_input():
         return dict_of_map
 
 
-def plot_message(dict_of_map):
-    list_of_wall = []
-    list_of_route = []
-
-    for key, value in dict_of_map.items():
-        if value == "#":
-            list_of_wall.append(key)
-        if value == ".":
-            list_of_route.append(key)
-
-    if len(list_of_route) > 0:
-        g, h = zip(*list_of_route)
-        matplotlib.pyplot.scatter(g, h, c='pink', marker="4", s=20)
-
-    if len(list_of_wall) > 0:
-        i, j = zip(*list_of_wall)
-        matplotlib.pyplot.scatter(i, j, c='black', marker="s", s=20)
-
-    matplotlib.pyplot.show()
-
-
-def should_mark_as_wall(current_location, map):
-    currentx, currenty = current_location
-    if ((currentx, currenty + 1) in map.keys() and map[
-        (currentx, currenty + 1)] == "#"
-            and (currentx + 1, currenty) in map.keys() and map[
-                (currentx + 1, currenty)] == "#"
-            and (currentx, currenty - 1) in map.keys() and map[
-                (currentx, currenty - 1)] == "#"):
-        return True
-
-    if ((currentx - 1, currenty) in map.keys() and map[
-        (currentx - 1, currenty)] == "#"
-            and (currentx + 1, currenty) in map.keys() and map[
-                (currentx + 1, currenty)] == "#"
-            and (currentx, currenty - 1) in map.keys() and map[
-                (currentx, currenty - 1)] == "#"):
-        return True
-
-    if ((currentx - 1, currenty) in map.keys() and map[
-        (currentx - 1, currenty)] == "#"
-            and (currentx, currenty + 1) in map.keys() and map[
-                (currentx, currenty + 1)] == "#"
-            and (currentx, currenty - 1) in map.keys() and map[
-                (currentx, currenty - 1)] == "#"):
-        return True
-
-    if ((currentx - 1, currenty) in map.keys() and map[
-        (currentx - 1, currenty)] == "#"
-            and (currentx, currenty + 1) in map.keys() and map[
-                (currentx, currenty + 1)] == "#"
-            and (currentx + 1, currenty) in map.keys() and map[
-                (currentx + 1, currenty)] == "#"):
-        return True
-
-    return False
-
-
-def move_right(current_location, map, list_of_visited):
-    current_x, current_y = current_location
-    up_location = (current_x, current_y + 1)
-    down_location = (current_x, current_y - 1)
-    left_location = (current_x - 1, current_y)
-    right_location = (current_x + 1, current_y)
-
-    if up_location not in list_of_visited and map[up_location] == ".":
-        current_location = up_location
-    elif right_location not in list_of_visited and map[right_location] == ".":
-        current_location = right_location
-    elif down_location not in list_of_visited and map[down_location] == ".":
-        current_location = down_location
-    elif left_location not in list_of_visited and map[left_location] == ".":
-        current_location = left_location
-    elif up_location in map.keys() and map[up_location] == ".":
-        current_location = up_location
-    elif right_location in map.keys() and map[right_location] == ".":
-        current_location = right_location
-    elif down_location in map.keys() and map[down_location] == ".":
-        current_location = down_location
-    elif left_location in map.keys() and map[left_location] == ".":
-        current_location = left_location
-
-    if should_mark_as_wall(current_location, map):
-        map[current_location] = "#"
-    print(current_location)
-    # plot_message(map)
-    return current_location
-
-
-def move_left(current_location, map, list_of_visited):
-    current_x, current_y = current_location
-    up_location = (current_x, current_y + 1)
-    down_location = (current_x, current_y - 1)
-    left_location = (current_x - 1, current_y)
-    right_location = (current_x + 1, current_y)
-
-    if up_location not in list_of_visited and map[up_location] == ".":
-        current_location = up_location
-    elif left_location not in list_of_visited and map[left_location] == ".":
-        current_location = left_location
-    elif down_location not in list_of_visited and map[down_location] == ".":
-        current_location = down_location
-    elif right_location not in list_of_visited and map[right_location] == ".":
-        current_location = right_location
-
-
-    elif up_location in map.keys() and map[up_location] == ".":
-        current_location = up_location
-    elif left_location in map.keys() and map[left_location] == ".":
-        current_location = left_location
-    elif down_location in map.keys() and map[down_location] == ".":
-        current_location = down_location
-    elif right_location in map.keys() and map[right_location] == ".":
-        current_location = right_location
-
-    if should_mark_as_wall(current_location, map):
-        map[current_location] = "#"
-    print(current_location)
-    # plot_message(map)
-    return current_location
-
-
 def reach_character(current_location, map):
     character = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     up, down, left, right = get_4_locations(current_location)
@@ -188,66 +64,6 @@ def reach_character(current_location, map):
         print("Found character!" + str(current_location))
         return True
     return False
-
-
-def get_right_destination_and_steps(start_location):
-    map = get_input()
-    # plot_message(map)
-
-    current_location = start_location
-    reach_portal = False
-    list_of_visited = []
-    count_of_steps = 0
-    while not reach_portal:
-        list_of_visited.append(current_location)
-        current_location = move_right(current_location, map, list_of_visited)
-        count_of_steps += 1
-        reach_portal = reach_character(current_location, map)
-        # plot_message(map)
-    print(count_of_steps)
-
-    current_location = start_location
-    reach_portal = False
-    list_of_visited = []
-    count_of_steps = 0
-    while not reach_portal:
-        list_of_visited.append(current_location)
-        current_location = move_right(current_location, map, list_of_visited)
-        count_of_steps += 1
-        reach_portal = reach_character(current_location, map)
-        # plot_message(map)
-    print(count_of_steps)
-    return count_of_steps
-
-
-def get_left_destination_and_steps(start_location):
-    map = get_input()
-    plot_message(map)
-
-    current_location = start_location
-    reach_portal = False
-    list_of_visited = []
-    count_of_steps = 0
-    while not reach_portal:
-        list_of_visited.append(current_location)
-        current_location = move_left(current_location, map, list_of_visited)
-        count_of_steps += 1
-        reach_portal = reach_character(current_location, map)
-        # plot_message(map)
-    print(count_of_steps)
-
-    current_location = start_location
-    reach_portal = False
-    list_of_visited = []
-    count_of_steps = 0
-    while not reach_portal:
-        list_of_visited.append(current_location)
-        current_location = move_left(current_location, map, list_of_visited)
-        count_of_steps += 1
-        reach_portal = reach_character(current_location, map)
-        # plot_message(map)
-    print(count_of_steps)
-    return count_of_steps
 
 
 def get_4_locations(center):
