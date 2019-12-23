@@ -1,5 +1,5 @@
 """
-Created at 2019-12-23 14:03
+Created at 2019-12-23 14:01
 
 @author: jinyanliu
 """
@@ -33,25 +33,10 @@ class InstructionDictKey(Enum):
     THIRD_MODE = "third_mode"
 
 
-class PaintRobotDirection(Enum):
-    UP = "up"
-    DOWN = "down"
-    LEFT = "left"
-    RIGHT = "right"
-
-
-class Drawing(Enum):
-    EMPTY = 0
-    WALL = 1
-    BLOCK = 2
-    HORIZONTAL_PADDLE = 3
-    BALL = 4
-
-
 def get_dict_of_int_input():
     dict_of_int_input = {}
     i = 0
-    with open("day_21_input") as lines:
+    with open("day_23_input") as lines:
         list_of_string = lines.readline().split(',')
         for s in list_of_string:
             dict_of_int_input[i] = int(s)
@@ -96,14 +81,17 @@ def get_replace_position(mode, input_dict, i, relative_base, number):
 
 
 class IntComputer:
-    def __init__(self, inputs_dict, thread_name):
+    def __init__(self, inputs_dict):
         self._is_halted = False
         self._relative_base = 0
         self._inputs_dict = inputs_dict
         self._inputs_list = []
         self._outputs_list = []
-        self._thread_name = thread_name
         self._current_address = 0
+
+    @property
+    def is_halted(self):
+        return self._is_halted
 
     @property
     def inputs_list(self):
@@ -156,8 +144,11 @@ class IntComputer:
         self._current_address += 4
 
     def perform_input(self, first_mode, second_mode, third_mode):
-        input_value = self.inputs_list[0]
-        self.inputs_list.pop(0)
+        if len(self.inputs_list) > 0:
+            input_value = self.inputs_list[0]
+            self.inputs_list.pop(0)
+        else:
+            input_value = -1
         replace_position = get_replace_position(first_mode, self._inputs_dict, self._current_address,
                                                 self._relative_base, 1)
         self._inputs_dict[replace_position] = input_value
@@ -168,7 +159,6 @@ class IntComputer:
         output_value = get_value(first_mode, self._inputs_dict, self._current_address, self._relative_base, 1)
         self.outputs_list.append(output_value)
         # print("output_value = " + str(output_value))
-        # print(chr(output_value), end='')
         self._current_address += 2
 
     def perform_jump_if_true(self, first_mode, second_mode, third_mode):
@@ -222,111 +212,48 @@ class IntComputer:
             self.perform_operation()
 
 
-def encode_to_ascii(target_string):
-    new_int_list = []
-    for s in target_string:
-        new_int_list.append(ord(s))
-    new_int_list.append(10)
-    print(new_int_list)
-    return new_int_list
+class Day23:
+    def __init__(self):
+        self._computers = []
 
+    @property
+    def computers(self):
+        return self._computers
 
-def get_solution_1():
-    input_list = []
-    # (!A or !B or !C) and D
-    list_of_instruction = ["NOT A J",
-                           "NOT B T",
-                           "OR T J",
-                           "NOT C T",
-                           "OR T J",
-                           "AND D J",
-                           "WALK"]
-    for item in list_of_instruction:
-        input_list += encode_to_ascii(item)
-        print("thread 1")
+    def get_inputs_dict(self):
+        return get_dict_of_int_input()
 
-    intComputer = IntComputer(get_dict_of_int_input(), "thread 1")
-    intComputer.inputs_list = input_list
-    intComputer.run_program()
-    return intComputer.outputs_list[-1]
+    def get_solution_1(self):
+        inputs_dict = self.get_inputs_dict()
+        for i in range(0, 50):
+            computer = IntComputer(inputs_dict.copy())
+            computer.inputs_list.append(i)
+            self.computers.append(computer)
 
+        for computer in self.computers:
+            t = threading.Thread(target=self.run_computer, args=(computer,))
+            t.start()
 
-def get_solution_2():
-    input_list = []
-    # (!A or !B or !C) and D and (E or H)
-    # !(!E and !H) and D and !(A and B and C)
-    list_of_instruction = ["NOT E T",
-                           "NOT H J",
-                           "AND T J",
-                           "NOT J J",
-                           "AND D J",
-                           "NOT A T",
-                           "NOT T T",
-                           "AND B T",
-                           "AND C T",
-                           "NOT T T",
-                           "AND T J",
-                           "RUN"]
-    for item in list_of_instruction:
-        input_list += encode_to_ascii(item)
-        print("thread 2")
+    def run_computer(self, me: IntComputer):
+        while not me.is_halted:
+            me.perform_operation()
 
-    intComputer = IntComputer(get_dict_of_int_input(), "thread 2")
-    intComputer.inputs_list = input_list
-    intComputer.run_program()
-    return intComputer.outputs_list[-1]
+            if len(me.outputs_list) == 3:
+                addr = me.outputs_list[0]
+                x = me.outputs_list[1]
+                y = me.outputs_list[2]
+                del me.outputs_list[2]
+                del me.outputs_list[1]
+                del me.outputs_list[0]
 
+                if addr == 255:
+                    print("Address=", addr, ", x=", x, ", y=", y)
 
-class myThread(threading.Thread):
-    def __init__(self, thread_name, inputs_list):
-        threading.Thread.__init__(self)
-        self._inputs_list = inputs_list
-        self._thread_name = thread_name
-
-    def run(self):
-        intComputer = IntComputer(get_dict_of_int_input(), self._thread_name)
-        intComputer.inputs_list = self._inputs_list
-        intComputer.run_program()
-        print(intComputer.outputs_list[-1])
+                if addr in range(0, 50):
+                    self.computers[addr].inputs_list.append(x)
+                    self.computers[addr].inputs_list.append(y)
 
 
 if __name__ == "__main__":
-    input_list_1 = []
-    # (!A or !B or !C) and D
-    list_of_instruction = ["NOT A J",
-                           "NOT B T",
-                           "OR T J",
-                           "NOT C T",
-                           "OR T J",
-                           "AND D J",
-                           "WALK"]
-    for item in list_of_instruction:
-        input_list_1 += encode_to_ascii(item)
-
-    input_list_2 = []
-    # (!A or !B or !C) and D and (E or H)
-    # !(!E and !H) and D and !(A and B and C)
-    list_of_instruction = ["NOT E T",
-                           "NOT H J",
-                           "AND T J",
-                           "NOT J J",
-                           "AND D J",
-                           "NOT A T",
-                           "NOT T T",
-                           "AND B T",
-                           "AND C T",
-                           "NOT T T",
-                           "AND T J",
-                           "RUN"]
-    for item in list_of_instruction:
-        input_list_2 += encode_to_ascii(item)
-
-    # Create new threads
-    thread1 = myThread("thread 1", input_list_1)
-    thread2 = myThread("thread 2", input_list_2)
-
-    # Start new Threads
-    thread1.start()
-    thread2.start()
-    thread1.join()
-    thread2.join()
+    today = Day23()
+    today.get_solution_1()
